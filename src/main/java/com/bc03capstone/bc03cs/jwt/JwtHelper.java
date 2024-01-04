@@ -1,0 +1,41 @@
+package com.bc03capstone.bc03cs.jwt;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+
+@Component
+public class JwtHelper {
+    @Value("${token.key}")
+    private String strKey;
+
+    private long expiredTime = 60L*24*60*60*1000;
+    public String generateToken (String data) {
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(strKey));
+        Date date = new Date();
+        long futureMilis = date.getTime() + expiredTime;
+        System.out.println("futureMilis " + futureMilis);
+        Date futureDate = new Date(futureMilis);
+        return Jwts.builder().subject(data).expiration(futureDate).signWith(key).compact();
+    }
+
+    public String decodeToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(strKey));
+        String data = null;
+        try {
+            data = Jwts.parser().verifyWith(key).build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+            System.out.println("token oke" + data);
+        } catch (Exception e) {
+            System.out.println("Error parse token: " + e.getMessage());
+        }
+        return data;
+    }
+}
