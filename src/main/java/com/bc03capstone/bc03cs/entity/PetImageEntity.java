@@ -13,4 +13,8 @@ public class PetImageEntity {
     private String imageUrl;
     @Column(name = "status")
     private Boolean status;
+
+    @ManyToOne
+    @JoinColumn(name = "petId")
+    private PetEntity pet;
 }
