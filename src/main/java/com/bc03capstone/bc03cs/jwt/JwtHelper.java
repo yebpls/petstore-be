@@ -19,7 +19,6 @@ public class JwtHelper {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(strKey));
         Date date = new Date();
         long futureMilis = date.getTime() + expiredTime;
-        System.out.println("futureMilis " + futureMilis);
         Date futureDate = new Date(futureMilis);
         return Jwts.builder().subject(data).expiration(futureDate).signWith(key).compact();
     }

@@ -3,6 +3,8 @@ package com.bc03capstone.bc03cs.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity(name = "species")
 public class SpeciesEntity {
@@ -13,4 +15,7 @@ public class SpeciesEntity {
     private String name;
     @Column(name = "status")
     private Boolean status;
+
+    @OneToMany(mappedBy = "species")
+    private List<PetEntity> listPet;
 }

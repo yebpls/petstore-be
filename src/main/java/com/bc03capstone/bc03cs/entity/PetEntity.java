@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
-@Data  //tao getter and setter
+@Data
 @Entity(name = "pet")
 public class PetEntity {
     @Id
@@ -38,7 +39,10 @@ public class PetEntity {
     @Column(name = "status")
     private Boolean status;
 
-//    @ManyToOne
-//    @JoinColumn(name = "id_role")
-//    private RoleEntity role;
+    @ManyToOne
+    @JoinColumn(name = "speciesId")
+    private SpeciesEntity species;
+
+    @OneToMany(mappedBy = "pet")
+    private List<PetImageEntity> listPetImage;
 }
