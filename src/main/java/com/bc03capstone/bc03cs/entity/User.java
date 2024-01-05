@@ -3,11 +3,14 @@ package com.bc03capstone.bc03cs.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity(name = "user")
-public class UserEntity {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,11 +19,11 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
     @Column(name = "birthday")
-    private Date birthday;
+    private LocalDate birthday;
     @Column(name = "gender")
     private String gender;
     @Column(name = "createDate")
-    private Date createDate;
+    private LocalDate createDate;
     @Column(name = "avatarUrl")
     private String avatarUrl;
     @Column(name = "phoneNumber")
@@ -31,4 +34,13 @@ public class UserEntity {
     private String role;
     @Column(name = "status")
     private boolean status;
+
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    private List<ShipLocation> listShipLocation;
+
+    @OneToMany(mappedBy = "user")
+    private List<Orders> listOrders;
 }

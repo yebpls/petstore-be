@@ -3,25 +3,28 @@ package com.bc03capstone.bc03cs.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @Entity(name = "pet")
-public class PetEntity {
+public class Pet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "breed")
     private String breed;
     @Column(name = "listPrice")
-    private float listPrice;
+    private BigDecimal listPrice;
     @Column(name = "salePercent")
     private int salePercent;
     @Column(name = "taxIncluded")
-    private float taxIncluded;
+    private BigDecimal taxIncluded;
     @Column(name = "uploadDate")
-    private Date uploadDate;
+    private LocalDate uploadDate;
     @Column(name = "age")
     private String age;
     @Column(name = "gender")
@@ -41,8 +44,8 @@ public class PetEntity {
 
     @ManyToOne
     @JoinColumn(name = "speciesId")
-    private SpeciesEntity species;
+    private Species species;
 
     @OneToMany(mappedBy = "pet")
-    private List<PetImageEntity> listPetImage;
+    private List<PetImage> listPetImage;
 }
