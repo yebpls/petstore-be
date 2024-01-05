@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -39,8 +38,8 @@ public class User implements Serializable {
     private Cart cart;
 
     @OneToMany(mappedBy = "user")
-    private List<ShipLocation> listShipLocation;
+    private List<ShipLocation> shipLocationList;
 
     @OneToMany(mappedBy = "user")
-    private List<Orders> listOrders;
+    private List<Orders> ordersList;
 }
