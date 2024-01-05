@@ -1,23 +1,16 @@
 package com.bc03capstone.bc03cs.DTO;
 
-
+import com.bc03capstone.bc03cs.entity.User;
 import lombok.Data;
-
 import java.io.Serializable;
 
 @Data
 public class ShipLocationDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
-
-    private Integer userId;
-
+    private int id;
     private String address;
-
     private String phoneNumber;
-
-    private Integer isDefault;
-
-    private Integer status;
-
+    private Boolean isDefault;
+    private Boolean status;
+    private User user;
 }
