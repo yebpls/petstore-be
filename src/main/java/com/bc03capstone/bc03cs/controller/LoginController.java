@@ -3,8 +3,6 @@ package com.bc03capstone.bc03cs.controller;
 import com.bc03capstone.bc03cs.jwt.JwtHelper;
 import com.bc03capstone.bc03cs.payload.BaseResponse;
 import com.google.gson.Gson;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Encoders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ public class LoginController {
 
     @Autowired
     private JwtHelper jwtHelper;
-    private Logger logger = LoggerFactory.getLogger(LoginController.class); //LoginController.class là tên file và pakage
+    private Logger logger = LoggerFactory.getLogger(LoginController.class);
     private Gson gson = new Gson();
     @PostMapping("")
     public ResponseEntity<?> login() {

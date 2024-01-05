@@ -1,6 +1,6 @@
 package com.bc03capstone.bc03cs.service;
 
-import com.bc03capstone.bc03cs.entity.UserEntity;
+import com.bc03capstone.bc03cs.entity.User;
 import com.bc03capstone.bc03cs.repository.UserRepository;
 import com.bc03capstone.bc03cs.service.imp.LoginServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,11 @@ public class LoginService implements LoginServiceImp {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public UserEntity checkLogin(String email, String password) {
-        UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity != null) {
-            if (passwordEncoder.matches(password, userEntity.getPassword())) {
-                return userEntity;
+    public User checkLogin(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return user;
             }
         }
         return null;

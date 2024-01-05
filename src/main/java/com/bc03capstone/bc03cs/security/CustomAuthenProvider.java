@@ -1,6 +1,6 @@
 package com.bc03capstone.bc03cs.security;
 
-import com.bc03capstone.bc03cs.entity.UserEntity;
+import com.bc03capstone.bc03cs.entity.User;
 import com.bc03capstone.bc03cs.service.imp.LoginServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -22,10 +22,10 @@ public class CustomAuthenProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
-        UserEntity userEntity = loginServiceImp.checkLogin(email,password);
-        if (userEntity != null) {
+        User user = loginServiceImp.checkLogin(email,password);
+        if (user != null) {
             List<GrantedAuthority> listRoles = new ArrayList<>();
-            SimpleGrantedAuthority role = new SimpleGrantedAuthority(userEntity.getRole());
+            SimpleGrantedAuthority role = new SimpleGrantedAuthority(user.getRole());
             listRoles.add(role);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken("", "",listRoles);
