@@ -1,6 +1,8 @@
 package com.bc03capstone.bc03cs.DTO;
 
-import com.bc03capstone.bc03cs.entity.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Data
 public class PetDTO implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private int id;
     private String breed;
@@ -24,6 +27,8 @@ public class PetDTO implements Serializable {
     private String description;
     private Boolean state;
     private Boolean status;
-    private Species species;
-    private List<PetImage> listPetImage;
+    @JsonIgnoreProperties("petDTOList")
+    private SpeciesDTO speciesDTO;
+    @JsonIgnoreProperties("petDTO")
+    private List<PetImageDTO> petImageDTOList;
 }

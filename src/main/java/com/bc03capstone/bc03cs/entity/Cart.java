@@ -18,7 +18,7 @@ public class Cart implements Serializable {
     private Boolean status;
 
     @OneToMany(mappedBy = "cart")
-    private List<CartItem> listCartItem;
+    private List<CartItem> cartItemList;
 
     @OneToOne
     @JoinColumn(name = "userId")

@@ -1,6 +1,7 @@
 package com.bc03capstone.bc03cs.DTO;
 
-import com.bc03capstone.bc03cs.entity.Pet;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
@@ -11,5 +12,6 @@ public class SpeciesDTO implements Serializable {
     private int id;
     private String name;
     private Boolean status;
-    private List<Pet> listPet;
+    @JsonIgnoreProperties("speciesDTO")
+    private List<PetDTO> petDTOList;
 }

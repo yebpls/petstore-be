@@ -19,5 +19,5 @@ public class Species implements Serializable {
     private Boolean status;
 
     @OneToMany(mappedBy = "species")
-    private List<Pet> listPet;
+    private List<Pet> petList;
 }

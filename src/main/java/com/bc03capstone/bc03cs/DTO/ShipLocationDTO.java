@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.DTO;
 
-import com.bc03capstone.bc03cs.entity.User;
 import lombok.Data;
 import java.io.Serializable;
 
@@ -12,5 +11,5 @@ public class ShipLocationDTO implements Serializable {
     private String phoneNumber;
     private Boolean isDefault;
     private Boolean status;
-    private User user;
+    private UserDTO userDTO;
 }

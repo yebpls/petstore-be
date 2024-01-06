@@ -1,8 +1,5 @@
 package com.bc03capstone.bc03cs.DTO;
 
-import com.bc03capstone.bc03cs.entity.OrderItem;
-import com.bc03capstone.bc03cs.entity.ShipLocation;
-import com.bc03capstone.bc03cs.entity.User;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,7 +16,7 @@ public class OrdersDTO implements Serializable {
     private LocalDateTime orderTime;
     private Boolean state;
     private Boolean status;
-    private ShipLocation shipLocation;
-    private User user;
-    private List<OrderItem> listOrderItem;
+    private ShipLocationDTO shipLocationDTO;
+    private UserDTO userDTO;
+    private List<OrderItemDTO> orderItemDTOList;
 }

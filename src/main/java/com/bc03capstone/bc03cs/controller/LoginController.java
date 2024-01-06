@@ -2,6 +2,7 @@ package com.bc03capstone.bc03cs.controller;
 
 import com.bc03capstone.bc03cs.jwt.JwtHelper;
 import com.bc03capstone.bc03cs.payload.BaseResponse;
+import com.bc03capstone.bc03cs.repository.PetRepository;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,11 @@ public class LoginController {
         baseResponse.setData(jwtToken);
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
+    @Autowired
+    PetRepository petRepository;
     @GetMapping("")
     public ResponseEntity<?> check() {
+        petRepository.findAll();
         return new ResponseEntity<>("admin oke", HttpStatus.OK);
     }
 }

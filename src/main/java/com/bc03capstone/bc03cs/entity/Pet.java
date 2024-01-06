@@ -6,7 +6,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -47,5 +46,5 @@ public class Pet implements Serializable {
     private Species species;
 
     @OneToMany(mappedBy = "pet")
-    private List<PetImage> listPetImage;
+    private List<PetImage> petImageList;
 }

@@ -1,6 +1,7 @@
 package com.bc03capstone.bc03cs.DTO;
 
-import com.bc03capstone.bc03cs.entity.Pet;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import java.io.Serializable;
 
@@ -10,5 +11,6 @@ public class PetImageDTO implements Serializable {
     private int id;
     private String imageUrl;
     private Boolean status;
-    private Pet pet;
+    @JsonIgnoreProperties("petImageDTOList")
+    private PetDTO petDTO;
 }

@@ -1,8 +1,5 @@
 package com.bc03capstone.bc03cs.DTO;
 
-import com.bc03capstone.bc03cs.entity.Cart;
-import com.bc03capstone.bc03cs.entity.Orders;
-import com.bc03capstone.bc03cs.entity.ShipLocation;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,7 +18,7 @@ public class UserDTO implements Serializable {
     private String password;
     private String role;
     private boolean status;
-    private Cart cart;
-    private List<ShipLocation> listShipLocation;
-    private List<Orders> listOrders;
+    private CartDTO cartDTO;
+    private List<ShipLocationDTO> shipLocationList;
+    private List<OrdersDTO> ordersDTOList;
 }

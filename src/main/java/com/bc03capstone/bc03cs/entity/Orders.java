@@ -46,5 +46,5 @@ public class Orders implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "orders")
-    private List<OrderItem> listOrderItem;
+    private List<OrderItem> orderItemList;
 }
