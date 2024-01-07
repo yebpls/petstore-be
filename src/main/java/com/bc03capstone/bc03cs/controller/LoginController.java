@@ -1,5 +1,6 @@
 package com.bc03capstone.bc03cs.controller;
 
+import com.bc03capstone.bc03cs.DTO.SignInRequest;
 import com.bc03capstone.bc03cs.jwt.JwtHelper;
 import com.bc03capstone.bc03cs.payload.BaseResponse;
 import com.bc03capstone.bc03cs.repository.PetRepository;
@@ -31,7 +32,9 @@ public class LoginController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<?> signin(@RequestBody SignInRequest signInRequest) {
+        String email = signInRequest.getEmail();
+        String password = signInRequest.getPassword();
         logger.info("Username: " + email);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
         Authentication authentication = authenticationManager.authenticate(token);
