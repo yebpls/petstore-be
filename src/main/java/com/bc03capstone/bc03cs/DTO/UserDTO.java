@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class UserDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int id;
+    private Integer id;
     private String fullName;
     private String email;
     private LocalDate birthday;
@@ -17,8 +17,8 @@ public class UserDTO implements Serializable {
     private String phoneNumber;
     private String password;
     private String role;
-    private boolean status;
-    private CartDTO cartDTO;
-    private List<ShipLocationDTO> shipLocationList;
-    private List<OrdersDTO> ordersDTOList;
+
+    private Integer cartId;
+    private List<Integer> shipLocationIdList;
+    private List<Integer> orderIdList;
 }

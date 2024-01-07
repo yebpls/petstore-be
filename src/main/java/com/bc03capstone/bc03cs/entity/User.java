@@ -1,8 +1,8 @@
 package com.bc03capstone.bc03cs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(name = "fullName")
     private String fullName;
     @Column(name = "email")
@@ -34,12 +34,15 @@ public class User implements Serializable {
     @Column(name = "status")
     private boolean status;
 
+    @JsonIgnoreProperties("user")
     @OneToOne(mappedBy = "user")
     private Cart cart;
 
+    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
     private List<ShipLocation> shipLocationList;
 
+    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
     private List<Orders> ordersList;
 }

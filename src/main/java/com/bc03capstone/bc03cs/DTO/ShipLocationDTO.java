@@ -6,10 +6,10 @@ import java.io.Serializable;
 @Data
 public class ShipLocationDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int id;
+    private Integer id;
     private String address;
     private String phoneNumber;
     private Boolean isDefault;
-    private Boolean status;
-    private UserDTO userDTO;
+
+    private Integer userId;
 }

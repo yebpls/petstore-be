@@ -1,8 +1,8 @@
 package com.bc03capstone.bc03cs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,13 +13,13 @@ import java.util.List;
 public class Pet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(name = "breed")
     private String breed;
     @Column(name = "listPrice")
     private BigDecimal listPrice;
     @Column(name = "salePercent")
-    private int salePercent;
+    private Integer salePercent;
     @Column(name = "taxIncluded")
     private BigDecimal taxIncluded;
     @Column(name = "uploadDate")
@@ -41,10 +41,12 @@ public class Pet implements Serializable {
     @Column(name = "status")
     private Boolean status;
 
+    @JsonIgnoreProperties("pet")
     @ManyToOne
     @JoinColumn(name = "speciesId")
     private Species species;
 
+    @JsonIgnoreProperties("pet")
     @OneToMany(mappedBy = "pet")
     private List<PetImage> petImageList;
 }
