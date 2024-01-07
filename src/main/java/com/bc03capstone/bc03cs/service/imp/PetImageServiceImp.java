@@ -1,6 +1,8 @@
 package com.bc03capstone.bc03cs.service.imp;
 
 
-public interface PetImageServiceImp {
+import org.springframework.web.multipart.MultipartFile;
 
+public interface PetImageServiceImp {
+    void addPetImage(MultipartFile imageUrl, Integer petId);
 }
