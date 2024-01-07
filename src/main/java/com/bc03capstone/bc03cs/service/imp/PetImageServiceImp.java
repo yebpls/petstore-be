@@ -1,9 +1,8 @@
 package com.bc03capstone.bc03cs.service.imp;
 
-import com.bc03capstone.bc03cs.DTO.PetImageDTO;
-import com.bc03capstone.bc03cs.entity.PetImage;
 
+import org.springframework.web.multipart.MultipartFile;
 
 public interface PetImageServiceImp {
-    PetImageDTO convertToDTO(PetImage petImage);
+    void addPetImage(MultipartFile imageUrl, Integer petId);
 }

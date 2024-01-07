@@ -9,14 +9,14 @@ import java.util.List;
 @Data
 public class OrdersDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int id;
+    private Integer id;
     private BigDecimal total;
     private String payLink;
     private String code;
     private LocalDateTime orderTime;
     private Boolean state;
-    private Boolean status;
-    private ShipLocationDTO shipLocationDTO;
-    private UserDTO userDTO;
-    private List<OrderItemDTO> orderItemDTOList;
+
+    private Integer shipLocationId;
+    private Integer userId;
+    private List<Integer> orderItemIdList;
 }

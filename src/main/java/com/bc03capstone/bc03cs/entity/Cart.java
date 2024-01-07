@@ -1,5 +1,6 @@
 package com.bc03capstone.bc03cs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,14 +13,15 @@ public class Cart implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Integer id;
     @Column(name = "status")
     private Boolean status;
 
+    @JsonIgnoreProperties("cart")
     @OneToMany(mappedBy = "cart")
     private List<CartItem> cartItemList;
 
+    @JsonIgnoreProperties("cart")
     @OneToOne
     @JoinColumn(name = "userId")
     private User user;
