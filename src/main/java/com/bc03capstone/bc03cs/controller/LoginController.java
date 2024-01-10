@@ -1,9 +1,12 @@
 package com.bc03capstone.bc03cs.controller;
 
 import com.bc03capstone.bc03cs.DTO.SignInRequest;
+import com.bc03capstone.bc03cs.entity.User;
 import com.bc03capstone.bc03cs.jwt.JwtHelper;
 import com.bc03capstone.bc03cs.payload.BaseResponse;
 import com.bc03capstone.bc03cs.repository.PetRepository;
+import com.bc03capstone.bc03cs.service.LoginService;
+import com.bc03capstone.bc03cs.service.imp.LoginServiceImp;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,9 @@ public class LoginController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private LoginServiceImp loginServiceImp;
+
+    @Autowired
     private JwtHelper jwtHelper;
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
     private Gson gson = new Gson();
@@ -39,8 +45,10 @@ public class LoginController {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
         Authentication authentication = authenticationManager.authenticate(token);
         logger.info("authentication: " + authentication);
+        User user = loginServiceImp.checkLogin(email, password);
+//        System.out.println(user);
         String json = gson.toJson(authentication.getAuthorities());
-        String jwtToken = jwtHelper.generateToken(json);
+        String jwtToken = jwtHelper.generateToken(json, user.getRole(), user.getId());
         logger.info("Response: " + jwtToken);
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setData(jwtToken);
