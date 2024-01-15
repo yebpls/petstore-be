@@ -1,7 +1,6 @@
 package com.bc03capstone.bc03cs.service;
 
 import com.bc03capstone.bc03cs.service.imp.FileServiceImp;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
