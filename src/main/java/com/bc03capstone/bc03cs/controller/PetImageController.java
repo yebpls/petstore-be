@@ -1,9 +1,6 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.payload.BaseResponse;
 import com.bc03capstone.bc03cs.service.imp.PetImageServiceImp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +11,30 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/petImage")
 public class PetImageController {
-    private Logger logger = LoggerFactory.getLogger(PetImageController.class);
     @Autowired
     private PetImageServiceImp petImageServiceImp;
-    private BaseResponse baseResponse = new BaseResponse();;
+
+    @GetMapping("/findAllByPetId")
+    public ResponseEntity<?> getAllByStatusAndPetId(@RequestParam Integer petId) {
+        return new ResponseEntity<>(petImageServiceImp.getAllByStatusAndPetId(petId), HttpStatus.OK);
+    }
+
+    @GetMapping("/findById")
+    public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
+        return new ResponseEntity<>(petImageServiceImp.getByStatusAndId(id), HttpStatus.OK);
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<?> addPetImage(
+    public ResponseEntity<?> add(
             @RequestPart(value = "imageUrl") MultipartFile imageUrl,
             @RequestPart(value = "petId") Integer petId) {
-        petImageServiceImp.addPetImage(imageUrl, petId);
-        baseResponse.setMessage("Add petImage success");
-        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        petImageServiceImp.add(imageUrl, petId);
+        return new ResponseEntity<>("Add petImage success", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        petImageServiceImp.delete(id);
+        return new ResponseEntity<>("delete petImage success", HttpStatus.OK);
     }
 }

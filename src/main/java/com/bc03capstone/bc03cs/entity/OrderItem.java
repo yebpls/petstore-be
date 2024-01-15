@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Data
 @Entity(name = "orderItem")
@@ -15,7 +14,7 @@ public class OrderItem implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "price")
-    private BigDecimal price;
+    private String price;
     @Column(name = "status")
     private Boolean status;
 

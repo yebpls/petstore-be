@@ -3,6 +3,7 @@ package com.bc03capstone.bc03cs.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
