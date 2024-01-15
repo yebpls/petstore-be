@@ -1,63 +1,99 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.PetDTO;
-import com.bc03capstone.bc03cs.payload.BaseResponse;
 import com.bc03capstone.bc03cs.service.imp.PetServiceImp;
-import io.swagger.v3.oas.annotations.Parameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
-import java.util.List;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/pet")
 public class PetController {
-    private Logger logger = LoggerFactory.getLogger(PetController.class);
     @Autowired
     private PetServiceImp petServiceImp;
-    private BaseResponse baseResponse = new BaseResponse();;
+
     @GetMapping("")
-    public ResponseEntity<?> getAllProduct() {
-        List<PetDTO> listPetDTO = petServiceImp.getAllPet();
-        baseResponse.setData(listPetDTO);
-        if (listPetDTO.isEmpty()) {
-            baseResponse.setMessage("No pets found");
-        }
-        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    public ResponseEntity<?> getAllByStateAndStatus() {
+        return new ResponseEntity<>(petServiceImp.getAllByStateAndStatus(), HttpStatus.OK);
     }
-    @GetMapping("/find/{id}")
-    public ResponseEntity<?> getPetById(@Parameter(description = "Pet ID", example = "1") @PathVariable("id") Integer id) {
-        PetDTO petDTO = petServiceImp.getPetById(id);
-        baseResponse.setData(petDTO);
-        if (petDTO == null) {
-            baseResponse.setMessage("Pet not found");
-        }
-        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+
+    @GetMapping("/findAllBySpecies")
+    public ResponseEntity<?> getAllBySpeciesAndStateAndStatus(@RequestParam Integer speciesId) {
+        return new ResponseEntity<>(petServiceImp.getAllBySpeciesAndStateAndStatus(speciesId), HttpStatus.OK);
     }
+
+    @GetMapping("/findById")
+    public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
+        return new ResponseEntity<>(petServiceImp.getByStatusAndId(id), HttpStatus.OK);
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<?> addPet(
+    public ResponseEntity<?> add(
             @RequestPart(value = "breed") String breed,
-            @RequestPart(value = "listPrice") BigDecimal listPrice,
+            @RequestPart(value = "listPrice") String listPrice,
             @RequestPart(value = "salePercent") Integer salePercent,
-            @RequestPart(value = "taxIncluded") BigDecimal taxIncluded,
+            @RequestPart(value = "taxIncluded") String taxIncluded,
             @RequestPart(value = "age") String age,
             @RequestPart(value = "gender") String gender,
             @RequestPart(value = "color") String color,
             @RequestPart(value = "weight") String weight,
             @RequestPart(value = "country") String country,
             @RequestPart(value = "description") String description,
-            @RequestPart(value = "speciesID") Integer speciesID,
+            @RequestPart(value = "mainImage") MultipartFile mainImage,
+            @RequestPart(value = "speciesID") Integer speciesId,
             @RequestPart(value = "imageUrlList") MultipartFile[] imageUrlList) {
-        petServiceImp.addPet(breed, listPrice, salePercent, taxIncluded, age,
-                gender, color, weight, country, description, speciesID, imageUrlList);
-        baseResponse.setMessage("Add pet success");
-        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        petServiceImp.add(breed, listPrice, salePercent, taxIncluded,
+                age, gender, color, weight, country, description,
+                mainImage, speciesId, imageUrlList);
+        return new ResponseEntity<>("Add pet success", HttpStatus.OK);
     }
+
+    @PostMapping("/updateMainImage")
+    public ResponseEntity<?> updateMainImage(
+            @RequestPart(value = "id") Integer id,
+            @RequestPart(value = "mainImage") MultipartFile mainImage) {
+        petServiceImp.updateMainImage(id, mainImage);
+        return new ResponseEntity<>("update mainImage of pet success", HttpStatus.OK);
+    }
+
+    @PostMapping("/updateInformation")
+    public ResponseEntity<?> updateInformation(
+            @RequestPart(value = "id") Integer id,
+            @RequestPart(value = "breed") String breed,
+            @RequestPart(value = "listPrice") String listPrice,
+            @RequestPart(value = "salePercent") Integer salePercent,
+            @RequestPart(value = "taxIncluded") String taxIncluded,
+            @RequestPart(value = "age") String age,
+            @RequestPart(value = "gender") String gender,
+            @RequestPart(value = "color") String color,
+            @RequestPart(value = "weight") String weight,
+            @RequestPart(value = "country") String country,
+            @RequestPart(value = "description") String description,
+            @RequestPart(value = "speciesID") Integer speciesId) {
+        petServiceImp.updateInformation(id, breed, listPrice, salePercent, taxIncluded,
+                age, gender, color, weight, country, description, speciesId);
+        return new ResponseEntity<>("update Information of pet success", HttpStatus.OK);
+    }
+
+    @PostMapping("/hide/{id}")
+    public ResponseEntity<?> hide(@PathVariable Integer id) {
+        petServiceImp.hide(id);
+        return new ResponseEntity<>("hide pet success", HttpStatus.OK);
+    }
+
+    @PostMapping("/show/{id}")
+    public ResponseEntity<?> show(@PathVariable Integer id) {
+        petServiceImp.show(id);
+        return new ResponseEntity<>("show pet success", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        petServiceImp.delete(id);
+        return new ResponseEntity<>("delete pet success", HttpStatus.OK);
+    }
+
 }

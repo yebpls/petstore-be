@@ -22,25 +22,29 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Autowired
     private CustomAuthenProvider customAuthenProvider;
     @Autowired
     private JwtFilter jwtFilter;
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
                 .authenticationProvider(customAuthenProvider)
                 .build();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf((csrf) -> csrf.disable())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                    .requestMatchers("/login/**","/api/test","/swagger-ui/**","/api-docs/**","/file/**").permitAll()
-                    .requestMatchers(HttpMethod.GET,"/api/pet/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/pet/**","/api/petImage/**").hasRole("ADMIN")
-                    .anyRequest().authenticated())
+                        .requestMatchers("/login/**", "/api/test", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pet/**", "/api/petImage/**", "/api/species/**","/file/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/pet/**", "/api/petImage/**", "/api/species/**","/file/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/pet/**", "/api/petImage/**", "/api/species/**","/file/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,11 +16,11 @@ public class Pet implements Serializable {
     @Column(name = "breed")
     private String breed;
     @Column(name = "listPrice")
-    private BigDecimal listPrice;
+    private String listPrice;
     @Column(name = "salePercent")
     private Integer salePercent;
     @Column(name = "taxIncluded")
-    private BigDecimal taxIncluded;
+    private String taxIncluded;
     @Column(name = "uploadDate")
     private LocalDate uploadDate;
     @Column(name = "age")
@@ -36,6 +35,8 @@ public class Pet implements Serializable {
     private String country;
     @Column(name = "description")
     private String description;
+    @Column(name = "mainImage")
+    private String mainImage;
     @Column(name = "state")
     private Boolean state;
     @Column(name = "status")
