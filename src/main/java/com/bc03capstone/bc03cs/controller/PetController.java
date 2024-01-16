@@ -15,7 +15,6 @@ public class PetController {
     @Autowired
     private PetServiceImp petServiceImp;
 
-    @CrossOrigin
     @GetMapping("")
     public ResponseEntity<?> getAllByStateAndStatus() {
         return new ResponseEntity<>(petServiceImp.getAllByStateAndStatus(), HttpStatus.OK);
