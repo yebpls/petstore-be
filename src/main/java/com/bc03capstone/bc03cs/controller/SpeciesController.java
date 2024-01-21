@@ -20,7 +20,7 @@ public class SpeciesController {
         return new ResponseEntity<>(speciesServiceImp.getAllByStatus(), HttpStatus.OK);
     }
 
-    @GetMapping("/findById")
+    @GetMapping("/getById")
     public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
         return new ResponseEntity<>(speciesServiceImp.getByStatusAndId(id), HttpStatus.OK);
     }

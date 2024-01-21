@@ -20,12 +20,12 @@ public class PetController {
         return new ResponseEntity<>(petServiceImp.getAllByStateAndStatus(), HttpStatus.OK);
     }
 
-    @GetMapping("/findAllBySpecies")
+    @GetMapping("/getAllBySpecies")
     public ResponseEntity<?> getAllBySpeciesAndStateAndStatus(@RequestParam Integer speciesId) {
         return new ResponseEntity<>(petServiceImp.getAllBySpeciesAndStateAndStatus(speciesId), HttpStatus.OK);
     }
 
-    @GetMapping("/findById")
+    @GetMapping("/getById")
     public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
         return new ResponseEntity<>(petServiceImp.getByStatusAndId(id), HttpStatus.OK);
     }

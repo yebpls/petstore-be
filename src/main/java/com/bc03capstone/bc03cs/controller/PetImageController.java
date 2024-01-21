@@ -14,12 +14,12 @@ public class PetImageController {
     @Autowired
     private PetImageServiceImp petImageServiceImp;
 
-    @GetMapping("/findAllByPetId")
+    @GetMapping("/getAllByPetId")
     public ResponseEntity<?> getAllByStatusAndPetId(@RequestParam Integer petId) {
         return new ResponseEntity<>(petImageServiceImp.getAllByStatusAndPetId(petId), HttpStatus.OK);
     }
 
-    @GetMapping("/findById")
+    @GetMapping("/getById")
     public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
         return new ResponseEntity<>(petImageServiceImp.getByStatusAndId(id), HttpStatus.OK);
     }
