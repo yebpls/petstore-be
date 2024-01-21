@@ -1,5 +1,6 @@
 package com.bc03capstone.bc03cs.controller;
 
+import com.bc03capstone.bc03cs.DTO.PetDTO;
 import com.bc03capstone.bc03cs.service.imp.PetServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,67 +16,42 @@ public class PetController {
     @Autowired
     private PetServiceImp petServiceImp;
 
-    @GetMapping("")
-    public ResponseEntity<?> getAllByStateAndStatus() {
-        return new ResponseEntity<>(petServiceImp.getAllByStateAndStatus(), HttpStatus.OK);
+    @GetMapping("findAll")
+    public ResponseEntity<?> findAll() {
+        return new ResponseEntity<>(petServiceImp.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/findAllBySpecies")
-    public ResponseEntity<?> getAllBySpeciesAndStateAndStatus(@RequestParam Integer speciesId) {
-        return new ResponseEntity<>(petServiceImp.getAllBySpeciesAndStateAndStatus(speciesId), HttpStatus.OK);
+    public ResponseEntity<?> findAllBySpecies(@RequestParam Integer speciesId) {
+        return new ResponseEntity<>(petServiceImp.findAllBySpecies(speciesId), HttpStatus.OK);
     }
 
     @GetMapping("/findById")
-    public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
-        return new ResponseEntity<>(petServiceImp.getByStatusAndId(id), HttpStatus.OK);
+    public ResponseEntity<?> findById(@RequestParam Integer id) {
+        return new ResponseEntity<>(petServiceImp.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("/add")
     public ResponseEntity<?> add(
-            @RequestPart(value = "breed") String breed,
-            @RequestPart(value = "listPrice") String listPrice,
-            @RequestPart(value = "salePercent") Integer salePercent,
-            @RequestPart(value = "taxIncluded") String taxIncluded,
-            @RequestPart(value = "age") String age,
-            @RequestPart(value = "gender") String gender,
-            @RequestPart(value = "color") String color,
-            @RequestPart(value = "weight") String weight,
-            @RequestPart(value = "country") String country,
-            @RequestPart(value = "description") String description,
+            @RequestPart(value = "petDTO") PetDTO petDTO,
             @RequestPart(value = "mainImage") MultipartFile mainImage,
-            @RequestPart(value = "speciesID") Integer speciesId,
             @RequestPart(value = "imageUrlList") MultipartFile[] imageUrlList) {
-        petServiceImp.add(breed, listPrice, salePercent, taxIncluded,
-                age, gender, color, weight, country, description,
-                mainImage, speciesId, imageUrlList);
+        petServiceImp.add(petDTO, mainImage, imageUrlList);
         return new ResponseEntity<>("Add pet success", HttpStatus.OK);
     }
 
-    @PostMapping("/updateMainImage")
-    public ResponseEntity<?> updateMainImage(
-            @RequestPart(value = "id") Integer id,
+    @PostMapping("/update")
+    public ResponseEntity<?> update(
+            @RequestPart(value = "petDTO") PetDTO petDTO,
             @RequestPart(value = "mainImage") MultipartFile mainImage) {
-        petServiceImp.updateMainImage(id, mainImage);
-        return new ResponseEntity<>("update mainImage of pet success", HttpStatus.OK);
+        petServiceImp.update(petDTO, mainImage);
+        return new ResponseEntity<>("update pet success", HttpStatus.OK);
     }
 
-    @PostMapping("/updateInformation")
-    public ResponseEntity<?> updateInformation(
-            @RequestPart(value = "id") Integer id,
-            @RequestPart(value = "breed") String breed,
-            @RequestPart(value = "listPrice") String listPrice,
-            @RequestPart(value = "salePercent") Integer salePercent,
-            @RequestPart(value = "taxIncluded") String taxIncluded,
-            @RequestPart(value = "age") String age,
-            @RequestPart(value = "gender") String gender,
-            @RequestPart(value = "color") String color,
-            @RequestPart(value = "weight") String weight,
-            @RequestPart(value = "country") String country,
-            @RequestPart(value = "description") String description,
-            @RequestPart(value = "speciesID") Integer speciesId) {
-        petServiceImp.updateInformation(id, breed, listPrice, salePercent, taxIncluded,
-                age, gender, color, weight, country, description, speciesId);
-        return new ResponseEntity<>("update Information of pet success", HttpStatus.OK);
+    @PostMapping("/sold/{id}")
+    public ResponseEntity<?> sold(@PathVariable Integer id) {
+        petServiceImp.sold(id);
+        return new ResponseEntity<>("sold pet success", HttpStatus.OK);
     }
 
     @PostMapping("/hide/{id}")

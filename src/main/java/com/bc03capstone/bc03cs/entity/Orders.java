@@ -22,8 +22,8 @@ public class Orders implements Serializable {
     private String code;
     @Column(name = "orderTime")
     private LocalDateTime orderTime;
-    @Column(name = "state")
-    private Boolean state;
+    @Column(name = "isCompleted")
+    private Boolean isCompleted;
     @Column(name = "status")
     private Boolean status;
 

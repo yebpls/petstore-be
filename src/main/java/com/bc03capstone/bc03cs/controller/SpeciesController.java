@@ -1,14 +1,13 @@
 package com.bc03capstone.bc03cs.controller;
 
+import com.bc03capstone.bc03cs.DTO.SpeciesDTO;
 import com.bc03capstone.bc03cs.service.imp.SpeciesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
-@Validated
 @RestController
 @RequestMapping("/api/species")
 public class SpeciesController {
@@ -16,26 +15,24 @@ public class SpeciesController {
     private SpeciesServiceImp speciesServiceImp;
 
     @GetMapping("")
-    public ResponseEntity<?> getAllByStatus() {
-        return new ResponseEntity<>(speciesServiceImp.getAllByStatus(), HttpStatus.OK);
+    public ResponseEntity<?> findAll() {
+        return new ResponseEntity<>(speciesServiceImp.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/findById")
-    public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
-        return new ResponseEntity<>(speciesServiceImp.getByStatusAndId(id), HttpStatus.OK);
+    public ResponseEntity<?> findById(@RequestParam Integer id) {
+        return new ResponseEntity<>(speciesServiceImp.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestPart(value = "name") String name) {
-        speciesServiceImp.add(name);
+    public ResponseEntity<?> add(@RequestBody SpeciesDTO speciesDTO) {
+        speciesServiceImp.add(speciesDTO);
         return new ResponseEntity<>("Add species success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> update(
-            @RequestPart(value = "id") Integer id,
-            @RequestPart(value = "name") String name) {
-        speciesServiceImp.update(id, name);
+    public ResponseEntity<?> update(@RequestBody SpeciesDTO speciesDTO) {
+        speciesServiceImp.update(speciesDTO);
         return new ResponseEntity<>("update species success", HttpStatus.OK);
     }
 

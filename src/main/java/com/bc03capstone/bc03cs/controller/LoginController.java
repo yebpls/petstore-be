@@ -46,19 +46,11 @@ public class LoginController {
         Authentication authentication = authenticationManager.authenticate(token);
         logger.info("authentication: " + authentication);
         User user = loginServiceImp.checkLogin(email, password);
-//        System.out.println(user);
         String json = gson.toJson(authentication.getAuthorities());
         String jwtToken = jwtHelper.generateToken(json, user.getRole(), user.getId());
         logger.info("Response: " + jwtToken);
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setData(jwtToken);
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
-    }
-    @Autowired
-    PetRepository petRepository;
-    @GetMapping("")
-    public ResponseEntity<?> check() {
-        petRepository.findAll();
-        return new ResponseEntity<>("admin oke", HttpStatus.OK);
     }
 }

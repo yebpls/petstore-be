@@ -37,8 +37,8 @@ public class Pet implements Serializable {
     private String description;
     @Column(name = "mainImage")
     private String mainImage;
-    @Column(name = "state")
-    private Boolean state;
+    @Column(name = "isSold")
+    private Boolean isSold;
     @Column(name = "status")
     private Boolean status;
 

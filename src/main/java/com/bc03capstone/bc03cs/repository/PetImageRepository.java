@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface PetImageRepository extends JpaRepository<PetImage, Integer> {
-    List<PetImage> findAllByStatusAndPet(Boolean status, Pet pet);
-    PetImage findByStatusAndId(Boolean status, Integer id);
+    List<PetImage> findAllByPetAndStatus(Pet pet, Boolean status);
+    PetImage findByIdAndStatus(Integer id, Boolean status);
 }
