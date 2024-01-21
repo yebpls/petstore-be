@@ -4,13 +4,11 @@ import com.bc03capstone.bc03cs.DTO.PetDTO;
 import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.Species;
 import com.bc03capstone.bc03cs.mapper.PetMapper;
-import com.bc03capstone.bc03cs.repository.PetImageRepository;
 import com.bc03capstone.bc03cs.repository.PetRepository;
 import com.bc03capstone.bc03cs.repository.SpeciesRepository;
 import com.bc03capstone.bc03cs.service.imp.FileServiceImp;
 import com.bc03capstone.bc03cs.service.imp.PetImageServiceImp;
 import com.bc03capstone.bc03cs.service.imp.PetServiceImp;
-import com.bc03capstone.bc03cs.service.imp.SpeciesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +30,6 @@ public class PetService implements PetServiceImp {
     private PetMapper petMapper;
     @Autowired
     private FileServiceImp fileServiceImp;
-    @Autowired
-    private PetImageRepository petImageRepository;
 
     @Override
     public List<PetDTO> getAllByStateAndStatus() {
@@ -72,10 +67,13 @@ public class PetService implements PetServiceImp {
         newPet.setWeight(weight);
         newPet.setCountry(country);
         newPet.setDescription(description);
+
         newPet.setMainImage(mainImage.getOriginalFilename());
         fileServiceImp.save(mainImage);
+
         newPet.setState(true);
         newPet.setStatus(true);
+
         Species species = new Species();
         species.setId(speciesId);
         newPet.setSpecies(species);
