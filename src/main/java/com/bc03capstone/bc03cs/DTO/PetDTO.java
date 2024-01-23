@@ -3,7 +3,6 @@ package com.bc03capstone.bc03cs.DTO;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class PetDTO implements Serializable {
@@ -21,8 +20,6 @@ public class PetDTO implements Serializable {
     private String country;
     private String description;
     private String mainImage;
-    private Boolean state;
-
+    private Boolean isSold;
     private Integer speciesID;
-    private List<Integer> petImageIdList;
 }

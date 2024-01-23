@@ -5,12 +5,12 @@ import com.bc03capstone.bc03cs.DTO.ShipLocationDTO;
 import java.util.List;
 
 public interface ShipLocationServiceImp {
-    List<ShipLocationDTO> getAllByStatusAndUser(Integer userId);
-    ShipLocationDTO getByStatusAndUserAndIsDefault(Integer userId);
-    ShipLocationDTO getByStatusAndId(Integer id);
-    void add(String address, String phoneNumber, Boolean isDefault, Integer userId);
+    List<ShipLocationDTO> findAllByUser(Integer userId);
+    ShipLocationDTO findByUserAndIsDefault(Integer userId);
+    ShipLocationDTO findById(Integer id);
+    void add(ShipLocationDTO shipLocationDTO);
     void changeDefault(Integer userId, Integer shipLocationId);
-    void updateInformation(Integer id, String address, String phoneNumber);
+    void update(ShipLocationDTO shipLocationDTO);
     void hide(Integer id);
     void show(Integer id);
     void delete(Integer id);

@@ -1,10 +1,8 @@
 package com.bc03capstone.bc03cs.service;
 
 import com.bc03capstone.bc03cs.DTO.SpeciesDTO;
-import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.Species;
 import com.bc03capstone.bc03cs.mapper.SpeciesMapper;
-import com.bc03capstone.bc03cs.repository.PetRepository;
 import com.bc03capstone.bc03cs.repository.SpeciesRepository;
 import com.bc03capstone.bc03cs.service.imp.SpeciesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,28 +19,24 @@ public class SpeciesService implements SpeciesServiceImp {
     @Autowired
     SpeciesMapper speciesMapper;
     @Autowired
-    private PetRepository petRepository;
-    @Autowired
     private PetService petService;
 
     @Override
-    public List<SpeciesDTO> getAllByStatus() {
+    public List<SpeciesDTO> findAll() {
         return speciesRepository.findAllByStatus(true)
                 .stream().map(speciesMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public SpeciesDTO getByStatusAndId(Integer id) {
-        Species species = speciesRepository.findByStatusAndId(true, id);
+    public SpeciesDTO findById(Integer id) {
+        Species species = speciesRepository.findByIdAndStatus(id,true);
         return speciesMapper.convertToDTO(species);
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(String name) {
-        Species newSpecies = new Species();
-        newSpecies.setName(name);
-        newSpecies.setStatus(true);
+    public void add(SpeciesDTO speciesDTO) {
+        Species newSpecies = speciesMapper.revertToEntity(speciesDTO);
         try {
             speciesRepository.save(newSpecies);
         } catch (Exception e) {
@@ -52,9 +46,8 @@ public class SpeciesService implements SpeciesServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void update(Integer id, String name) {
-        Species species = speciesRepository.findByStatusAndId(true, id);
-        species.setName(name);
+    public void update(SpeciesDTO speciesDTO) {
+        Species species = speciesMapper.revertToEntity(speciesDTO);
         try {
             speciesRepository.save(species);
         } catch (Exception e) {
@@ -64,14 +57,14 @@ public class SpeciesService implements SpeciesServiceImp {
 
     @Override
     public void hide(Integer id) {
-        Species species = speciesRepository.findByStatusAndId(true, id);
+        Species species = speciesRepository.findByIdAndStatus(id,true);
         species.setStatus(false);
         speciesRepository.save(species);
     }
 
     @Override
     public void show(Integer id) {
-        Species species = speciesRepository.findByStatusAndId(false, id);
+        Species species = speciesRepository.findByIdAndStatus(id,false);
         species.setStatus(true);
         speciesRepository.save(species);
     }

@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 public interface ShipLocationRepository extends JpaRepository<ShipLocation, Integer>, JpaSpecificationExecutor<ShipLocation> {
-    List<ShipLocation> findAllByStatusAndUser(Boolean status, User user);
-    ShipLocation findByStatusAndUserAndIsDefault(Boolean status, User user, Boolean isDefault);
-    ShipLocation findByStatusAndId(Boolean status, Integer id);
+    List<ShipLocation> findAllByUserAndStatus(User user, Boolean status);
+    ShipLocation findByUserAndIsDefaultAndStatus(User user, Boolean isDefault, Boolean status);
+    ShipLocation findByIdAndStatus(Integer id, Boolean status);
 
 }

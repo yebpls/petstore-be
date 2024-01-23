@@ -1,10 +1,7 @@
 package com.bc03capstone.bc03cs.service;
 
-import com.bc03capstone.bc03cs.DTO.PetDTO;
 import com.bc03capstone.bc03cs.DTO.ShipLocationDTO;
-import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.ShipLocation;
-import com.bc03capstone.bc03cs.entity.Species;
 import com.bc03capstone.bc03cs.entity.User;
 import com.bc03capstone.bc03cs.mapper.ShipLocationMapper;
 import com.bc03capstone.bc03cs.repository.OrdersRepository;
@@ -14,9 +11,7 @@ import com.bc03capstone.bc03cs.service.imp.ShipLocationServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,38 +31,30 @@ public class ShipLocationService implements ShipLocationServiceImp {
     private ShipLocationMapper shipLocationMapper;
 
     @Override
-    public List<ShipLocationDTO> getAllByStatusAndUser(Integer userId) {
+    public List<ShipLocationDTO> findAllByUser(Integer userId) {
         User user = userRepository.findByStatusAndId(true, userId);
-        return shipLocationRepository.findAllByStatusAndUser(true, user)
+        return shipLocationRepository.findAllByUserAndStatus(user,true)
                 .stream().map(shipLocationMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public ShipLocationDTO getByStatusAndUserAndIsDefault(Integer userId) {
+    public ShipLocationDTO findByUserAndIsDefault(Integer userId) {
         User user = userRepository.findByStatusAndId(true, userId);
-        ShipLocation shipLocation = shipLocationRepository.findByStatusAndUserAndIsDefault(true, user,true);
+        ShipLocation shipLocation = shipLocationRepository.findByUserAndIsDefaultAndStatus(user,true,true);
         return shipLocationMapper.convertToDTO(shipLocation);
     }
 
     @Override
-    public ShipLocationDTO getByStatusAndId(Integer id) {
-        ShipLocation shipLocation = shipLocationRepository.findByStatusAndId(true, id);
+    public ShipLocationDTO findById(Integer id) {
+        ShipLocation shipLocation = shipLocationRepository.findByIdAndStatus(id,true);
         return shipLocationMapper.convertToDTO(shipLocation);
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(String address, String phoneNumber, Boolean isDefault, Integer userId) {
-        ShipLocation newShiplocation = new ShipLocation();
-        newShiplocation.setAddress(address);
-        newShiplocation.setPhoneNumber(phoneNumber);
-
-        if (isDefault) offDefault(userId);
-        newShiplocation.setIsDefault(isDefault);
-
-        User user = new User();
-        user.setId(userId);
-        newShiplocation.setUser(user);
+    public void add(ShipLocationDTO shipLocationDTO) {
+        ShipLocation newShiplocation = shipLocationMapper.revertToEntity(shipLocationDTO);
+        if (newShiplocation.getIsDefault()) offDefault(newShiplocation.getUser().getId());
         try {
             shipLocationRepository.save(newShiplocation);
         } catch (Exception e) {
@@ -77,41 +64,50 @@ public class ShipLocationService implements ShipLocationServiceImp {
 
     private void offDefault(Integer userId) {
         User user = userRepository.findByStatusAndId(true, userId);
-        shipLocationRepository.findByStatusAndUserAndIsDefault(true, user,true).setIsDefault(false);
+        ShipLocation shipLocation = shipLocationRepository.findByUserAndIsDefaultAndStatus(user,true,true);
+        shipLocation.setIsDefault(false);
+        shipLocationRepository.save(shipLocation);
     }
+
     @Override
     public void changeDefault(Integer userId, Integer shipLocationId) {
         offDefault(userId);
-        shipLocationRepository.findByStatusAndId(true, shipLocationId).setIsDefault(true);
+        ShipLocation shipLocation = shipLocationRepository.findByIdAndStatus(shipLocationId,true);
+        shipLocation.setIsDefault(true);
+        shipLocationRepository.save(shipLocation);
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void updateInformation(Integer id, String address, String phoneNumber) {
-        ShipLocation shipLocation = shipLocationRepository.findByStatusAndId(true, id);
-        if (ordersRepository.findByShipLocation(shipLocation)==null) { //no order use this shipLocation
-            shipLocation.setAddress(address);
-            shipLocation.setPhoneNumber(phoneNumber);
-            try {
-                shipLocationRepository.save(shipLocation);
-            } catch (Exception e) {
-                throw new RuntimeException("Error update information shipLocation " + e.getMessage());
+    public void update(ShipLocationDTO shipLocationDTO) {
+        try {
+            ShipLocation newShipLocation = shipLocationMapper.revertToEntity(shipLocationDTO);
+            ShipLocation oldShipLocation = shipLocationRepository.findByIdAndStatus(shipLocationDTO.getId(), true);
+            if (oldShipLocation.getIsDefault()) newShipLocation.setIsDefault(true);
+            if (newShipLocation.getIsDefault()) offDefault(newShipLocation.getUser().getId());
+            if (ordersRepository.findByShipLocation(oldShipLocation)!=null) {
+                //an order used this shipLocation so have to create new shipLocation
+                newShipLocation.setId(null);
+                oldShipLocation.setStatus(false);
+                if (oldShipLocation.getIsDefault()) oldShipLocation.setIsDefault(false);
+                shipLocationRepository.save(oldShipLocation);
             }
-        } else {
-            add(address,phoneNumber,shipLocation.getIsDefault(),shipLocation.getUser().getId());
+            shipLocationRepository.save(newShipLocation);
+        } catch (Exception e) {
+            throw new RuntimeException("Error update information shipLocation " + e.getMessage());
         }
     }
 
     @Override
     public void hide(Integer id) {
-        ShipLocation shipLocation = shipLocationRepository.findByStatusAndId(true, id);
+        ShipLocation shipLocation = shipLocationRepository.findByIdAndStatus(id,true);
         shipLocation.setStatus(false);
         shipLocationRepository.save(shipLocation);
     }
 
     @Override
     public void show(Integer id) {
-        ShipLocation shipLocation = shipLocationRepository.findByStatusAndId(false, id);
+        ShipLocation shipLocation = shipLocationRepository.findByIdAndStatus(id,false);
         shipLocation.setStatus(true);
         shipLocationRepository.save(shipLocation);
     }

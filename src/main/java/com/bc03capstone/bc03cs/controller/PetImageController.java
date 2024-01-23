@@ -1,5 +1,6 @@
 package com.bc03capstone.bc03cs.controller;
 
+import com.bc03capstone.bc03cs.DTO.PetImageDTO;
 import com.bc03capstone.bc03cs.service.imp.PetImageServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,21 +15,21 @@ public class PetImageController {
     @Autowired
     private PetImageServiceImp petImageServiceImp;
 
-    @GetMapping("/getAllByPetId")
-    public ResponseEntity<?> getAllByStatusAndPetId(@RequestParam Integer petId) {
-        return new ResponseEntity<>(petImageServiceImp.getAllByStatusAndPetId(petId), HttpStatus.OK);
+    @GetMapping("/findAllByPet")
+    public ResponseEntity<?> findAllByPet(@RequestParam Integer petId) {
+        return new ResponseEntity<>(petImageServiceImp.findAllByPet(petId), HttpStatus.OK);
     }
 
-    @GetMapping("/getById")
-    public ResponseEntity<?> getByStatusAndId(@RequestParam Integer id) {
-        return new ResponseEntity<>(petImageServiceImp.getByStatusAndId(id), HttpStatus.OK);
+    @GetMapping("/findById")
+    public ResponseEntity<?> findById(@RequestParam Integer id) {
+        return new ResponseEntity<>(petImageServiceImp.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("/add")
     public ResponseEntity<?> add(
-            @RequestPart(value = "imageUrl") MultipartFile imageUrl,
-            @RequestPart(value = "petId") Integer petId) {
-        petImageServiceImp.add(imageUrl, petId);
+            @RequestPart(value = "petImageDTO") PetImageDTO petImageDTO,
+            @RequestPart(value = "imageUrl") MultipartFile imageUrl) {
+        petImageServiceImp.add(petImageDTO, imageUrl);
         return new ResponseEntity<>("Add petImage success", HttpStatus.OK);
     }
 

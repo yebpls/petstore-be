@@ -25,7 +25,7 @@ public class FileService implements FileServiceImp {
            if(!Files.exists(rootPath)) {
                Files.createDirectories(rootPath);
            }
-           Files.copy(file.getInputStream(),rootPath.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);  //resolve ==  /
+           Files.copy(file.getInputStream(),rootPath.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
        } catch (Exception e) {
            throw new RuntimeException("Error upload file " +e.getMessage());
        }

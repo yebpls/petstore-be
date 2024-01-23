@@ -10,6 +10,5 @@ public class ShipLocationDTO implements Serializable {
     private String address;
     private String phoneNumber;
     private Boolean isDefault;
-
     private Integer userId;
 }

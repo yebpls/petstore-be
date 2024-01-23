@@ -1,6 +1,7 @@
 package com.bc03capstone.bc03cs.service;
 
 import com.bc03capstone.bc03cs.DTO.PetDTO;
+import com.bc03capstone.bc03cs.DTO.PetImageDTO;
 import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.Species;
 import com.bc03capstone.bc03cs.mapper.PetMapper;
@@ -22,120 +23,88 @@ import java.util.stream.Collectors;
 public class PetService implements PetServiceImp {
     @Autowired
     private PetRepository petRepository;
+
     @Autowired
     private PetImageServiceImp petImageServiceImp;
+
     @Autowired
     private SpeciesRepository speciesRepository;
+
     @Autowired
     private PetMapper petMapper;
+
     @Autowired
     private FileServiceImp fileServiceImp;
 
     @Override
-    public List<PetDTO> getAllByStateAndStatus() {
-        return petRepository.findAllByStateAndStatus(true, true)
+    public List<PetDTO> findAll() {
+        return petRepository.findAllByIsSoldAndStatus(false, true)
                 .stream().map(petMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<PetDTO> getAllBySpeciesAndStateAndStatus(Integer speciesId) {
-        Species species = speciesRepository.findByStatusAndId(true, speciesId);
-        return petRepository.findAllBySpeciesAndStateAndStatus(species, true, true)
+    public List<PetDTO> findAllBySpecies(Integer speciesId) {
+        Species species = speciesRepository.findByIdAndStatus(speciesId,true);
+        return petRepository.findAllBySpeciesAndIsSoldAndStatus(species, false,true)
                 .stream().map(petMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public PetDTO getByStatusAndId(Integer id) {
-        Pet pet = petRepository.findByStatusAndId(true, id);
+    public PetDTO findById(Integer id) {
+        Pet pet = petRepository.findByIdAndStatus(id,true);
         return petMapper.convertToDTO(pet);
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(String breed, String listPrice, Integer salePercent, String taxIncluded,
-                    String age, String gender, String color, String weight, String country, String description,
-                    MultipartFile mainImage, Integer speciesId, MultipartFile[] imageUrlList) {
-        Pet newPet = new Pet();
-        newPet.setBreed(breed);
-        newPet.setListPrice(listPrice);
-        newPet.setSalePercent(salePercent);
-        newPet.setTaxIncluded(taxIncluded);
+    public void add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList) {
+        Pet newPet = petMapper.revertToEntity(petDTO);
         newPet.setUploadDate(LocalDate.now());
-        newPet.setAge(age);
-        newPet.setGender(gender);
-        newPet.setColor(color);
-        newPet.setWeight(weight);
-        newPet.setCountry(country);
-        newPet.setDescription(description);
-
         newPet.setMainImage(mainImage.getOriginalFilename());
         fileServiceImp.save(mainImage);
-
-        newPet.setState(true);
-        newPet.setStatus(true);
-
-        Species species = new Species();
-        species.setId(speciesId);
-        newPet.setSpecies(species);
         try {
             petRepository.save(newPet);
         } catch (Exception e) {
             throw new RuntimeException("Error add pet " + e.getMessage());
         }
         for (MultipartFile imageUrl : imageUrlList) {
-            petImageServiceImp.add(imageUrl, newPet.getId());
+            PetImageDTO petImageDTO = new PetImageDTO();
+            petImageDTO.setPetId(newPet.getId());
+            petImageServiceImp.add(petImageDTO, imageUrl);
         }
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void updateMainImage(Integer id, MultipartFile mainImage) {
-        Pet pet = petRepository.findByStatusAndId(true, id);
-        fileServiceImp.delete(pet.getMainImage());  //delete old mainImage file in folder
+    public void update(PetDTO petDTO, MultipartFile mainImage) {
+        Pet pet = petMapper.revertToEntity(petDTO);
+//        fileServiceImp.delete(pet.getMainImage());  //delete old mainImage file in folder
         pet.setMainImage(mainImage.getOriginalFilename());
         fileServiceImp.save(mainImage);
         try {
             petRepository.save(pet);
         } catch (Exception e) {
-            throw new RuntimeException("Error update MainImage pet " + e.getMessage());
+            throw new RuntimeException("Error update pet " + e.getMessage());
         }
     }
 
-    @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void updateInformation(Integer id, String breed, String listPrice, Integer salePercent, String taxIncluded, String age,
-                                  String gender, String color, String weight, String country, String description, Integer speciesId) {
-        Pet pet = petRepository.findByStatusAndId(true, id);
-        pet.setBreed(breed);
-        pet.setListPrice(listPrice);
-        pet.setSalePercent(salePercent);
-        pet.setTaxIncluded(taxIncluded);
-        pet.setAge(age);
-        pet.setGender(gender);
-        pet.setColor(color);
-        pet.setWeight(weight);
-        pet.setCountry(country);
-        pet.setDescription(description);
-        Species species = new Species();
-        species.setId(speciesId);
-        pet.setSpecies(species);
-        try {
-            petRepository.save(pet);
-        } catch (Exception e) {
-            throw new RuntimeException("Error update information pet " + e.getMessage());
-        }
+    public void sold(Integer id) {
+        Pet pet = petRepository.findByIdAndStatus(id,true);
+        pet.setIsSold(true);
+        petRepository.save(pet);
     }
 
     @Override
     public void hide(Integer id) {
-        Pet pet = petRepository.findByStatusAndId(true, id);
+        Pet pet = petRepository.findByIdAndStatus(id,true);
         pet.setStatus(false);
         petRepository.save(pet);
     }
 
     @Override
     public void show(Integer id) {
-        Pet pet = petRepository.findByStatusAndId(false, id);
+        Pet pet = petRepository.findByIdAndStatus(id,false);
         pet.setStatus(true);
         petRepository.save(pet);
     }
