@@ -32,14 +32,14 @@ public class ShipLocationService implements ShipLocationServiceImp {
 
     @Override
     public List<ShipLocationDTO> findAllByUser(Integer userId) {
-        User user = userRepository.findByStatusAndId(true, userId);
+        User user = userRepository.findByIdAndStatus(userId,true);
         return shipLocationRepository.findAllByUserAndStatus(user,true)
                 .stream().map(shipLocationMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public ShipLocationDTO findByUserAndIsDefault(Integer userId) {
-        User user = userRepository.findByStatusAndId(true, userId);
+        User user = userRepository.findByIdAndStatus(userId,true);
         ShipLocation shipLocation = shipLocationRepository.findByUserAndIsDefaultAndStatus(user,true,true);
         return shipLocationMapper.convertToDTO(shipLocation);
     }
@@ -63,7 +63,7 @@ public class ShipLocationService implements ShipLocationServiceImp {
     }
 
     private void offDefault(Integer userId) {
-        User user = userRepository.findByStatusAndId(true, userId);
+        User user = userRepository.findByIdAndStatus(userId,true);
         ShipLocation shipLocation = shipLocationRepository.findByUserAndIsDefaultAndStatus(user,true,true);
         shipLocation.setIsDefault(false);
         shipLocationRepository.save(shipLocation);
