@@ -1,12 +1,13 @@
 package com.bc03capstone.bc03cs.service;
 
-import com.bc03capstone.bc03cs.DTO.PetDTO;
 import com.bc03capstone.bc03cs.DTO.UserDTO;
-import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.User;
 import com.bc03capstone.bc03cs.mapper.UserMapper;
+import com.bc03capstone.bc03cs.repository.ShipLocationRepository;
 import com.bc03capstone.bc03cs.repository.UserRepository;
+import com.bc03capstone.bc03cs.service.imp.CartServiceImp;
 import com.bc03capstone.bc03cs.service.imp.FileServiceImp;
+import com.bc03capstone.bc03cs.service.imp.ShipLocationServiceImp;
 import com.bc03capstone.bc03cs.service.imp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,15 @@ public class UserService implements UserServiceImp {
     @Autowired
     private FileServiceImp fileServiceImp;
 
+    @Autowired
+    private CartServiceImp cartServiceImp;
+
+    @Autowired
+    private ShipLocationServiceImp shipLocationServiceImp;
+
+    @Autowired
+    private ShipLocationRepository shipLocationRepository;
+
     @Override
     public UserDTO findById(Integer id) {
         User user = userRepository.findByIdAndStatus(id,true);
@@ -41,6 +51,7 @@ public class UserService implements UserServiceImp {
         fileServiceImp.save(avatarUrl);
         try {
             userRepository.save(newUser);
+            cartServiceImp.add(newUser);
         } catch (Exception e) {
             throw new RuntimeException("Error add user " + e.getMessage());
         }
@@ -63,6 +74,7 @@ public class UserService implements UserServiceImp {
     @Override
     public void hide(Integer id) {
         User user = userRepository.findByIdAndStatus(id,true);
+        cartServiceImp.hide(user.getCart().getId());
         user.setStatus(false);
         userRepository.save(user);
     }
@@ -70,6 +82,7 @@ public class UserService implements UserServiceImp {
     @Override
     public void show(Integer id) {
         User user = userRepository.findByIdAndStatus(id,false);
+        cartServiceImp.show(user.getCart().getId());
         user.setStatus(true);
         userRepository.save(user);
     }
@@ -79,6 +92,9 @@ public class UserService implements UserServiceImp {
     public void delete(Integer id) {
         User user = userRepository.findById(id).orElseThrow();
 //        fileServiceImp.delete(user.getAvatarUrl());
+        cartServiceImp.delete(user.getCart().getId());
+        shipLocationRepository.findAllByUser(user).forEach(shipLocation -> shipLocationServiceImp.delete(shipLocation.getId()));
         userRepository.deleteById(id);
+
     }
 }

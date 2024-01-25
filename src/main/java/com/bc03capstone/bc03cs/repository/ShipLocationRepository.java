@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface ShipLocationRepository extends JpaRepository<ShipLocation, Integer>, JpaSpecificationExecutor<ShipLocation> {
     List<ShipLocation> findAllByUserAndStatus(User user, Boolean status);
+    List<ShipLocation> findAllByUser(User user);
     ShipLocation findByUserAndIsDefaultAndStatus(User user, Boolean isDefault, Boolean status);
     ShipLocation findByIdAndStatus(Integer id, Boolean status);
 
