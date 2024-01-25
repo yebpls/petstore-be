@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .cors((cors) -> cors.disable())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/login/**", "/api/test", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/login/**", "/swagger-ui/**", "/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**","/file/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**","/file/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/**","/file/**").hasRole("ADMIN")

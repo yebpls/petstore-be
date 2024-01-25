@@ -4,6 +4,7 @@ import com.bc03capstone.bc03cs.DTO.SpeciesDTO;
 import com.bc03capstone.bc03cs.entity.Species;
 import com.bc03capstone.bc03cs.mapper.SpeciesMapper;
 import com.bc03capstone.bc03cs.repository.SpeciesRepository;
+import com.bc03capstone.bc03cs.service.imp.PetServiceImp;
 import com.bc03capstone.bc03cs.service.imp.SpeciesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class SpeciesService implements SpeciesServiceImp {
     @Autowired
     SpeciesMapper speciesMapper;
     @Autowired
-    private PetService petService;
+    private PetServiceImp petServiceImp;
 
     @Override
     public List<SpeciesDTO> findAll() {
@@ -73,7 +74,7 @@ public class SpeciesService implements SpeciesServiceImp {
     @Override
     public void delete(Integer id) {
         Species species = speciesRepository.findById(id).orElseThrow();
-        species.getPetList().forEach(item -> petService.delete(item.getId()));
+        species.getPetList().forEach(item -> petServiceImp.delete(item.getId()));
         speciesRepository.deleteById(id);
     }
 }

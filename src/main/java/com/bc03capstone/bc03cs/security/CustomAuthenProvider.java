@@ -27,9 +27,7 @@ public class CustomAuthenProvider implements AuthenticationProvider {
             List<GrantedAuthority> listRoles = new ArrayList<>();
             SimpleGrantedAuthority role = new SimpleGrantedAuthority(user.getRole());
             listRoles.add(role);
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken("", "",listRoles);
-            return authenticationToken;
+            return new UsernamePasswordAuthenticationToken("", "",listRoles);
         }
         return null;
     }
