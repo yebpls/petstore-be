@@ -10,7 +10,6 @@ import com.bc03capstone.bc03cs.repository.CartRepository;
 import com.bc03capstone.bc03cs.repository.UserRepository;
 import com.bc03capstone.bc03cs.service.imp.CartItemServiceImp;
 import com.bc03capstone.bc03cs.service.imp.CartServiceImp;
-import com.bc03capstone.bc03cs.service.imp.FileServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
