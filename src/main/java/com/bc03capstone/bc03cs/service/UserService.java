@@ -30,7 +30,7 @@ public class UserService implements UserServiceImp {
     private ShipLocationServiceImp shipLocationServiceImp;
 
     @Autowired
-    private OrdersServiceImp ordersServiceImp;;
+    private OrdersServiceImp ordersServiceImp;
 
     @Override
     public UserDTO findById(Integer id) {
