@@ -70,6 +70,7 @@ public class OrdersService implements OrdersServiceImp {
     @Override
     public void hide(Integer id) {
         Orders orders = ordersRepository.findByIdAndStatus(id,true);
+        orders.getOrderItemList().forEach(orderItem -> orderItemServiceImp.hide(orderItem.getId()));
         orders.setStatus(false);
         ordersRepository.save(orders);
     }
@@ -77,6 +78,7 @@ public class OrdersService implements OrdersServiceImp {
     @Override
     public void show(Integer id) {
         Orders orders = ordersRepository.findByIdAndStatus(id,false);
+        orders.getOrderItemList().forEach(orderItem -> orderItemServiceImp.show(orderItem.getId()));
         orders.setStatus(true);
         ordersRepository.save(orders);
     }
@@ -85,7 +87,7 @@ public class OrdersService implements OrdersServiceImp {
     @Override
     public void delete(Integer id) {
         Orders orders = ordersRepository.findById(id).orElseThrow();
-        orders.getOrderItemList().forEach(item -> orderItemServiceImp.delete(item.getId()));
+        orders.getOrderItemList().forEach(orderItem -> orderItemServiceImp.delete(orderItem.getId()));
         ordersRepository.deleteById(id);
     }
 }
