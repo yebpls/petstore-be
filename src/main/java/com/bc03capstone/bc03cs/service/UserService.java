@@ -1,6 +1,8 @@
 package com.bc03capstone.bc03cs.service;
 
+import com.bc03capstone.bc03cs.DTO.PetDTO;
 import com.bc03capstone.bc03cs.DTO.UserDTO;
+import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.User;
 import com.bc03capstone.bc03cs.mapper.UserMapper;
 import com.bc03capstone.bc03cs.repository.UserRepository;
@@ -42,5 +44,41 @@ public class UserService implements UserServiceImp {
         } catch (Exception e) {
             throw new RuntimeException("Error add user " + e.getMessage());
         }
+    }
+
+    @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
+    @Override
+    public void update(UserDTO userDTO, MultipartFile avatarUrl) {
+        User user = userMapper.revertToEntity(userDTO);
+//        fileServiceImp.delete(user.getAvatarUrl());  //delete old mainImage file in folder
+        user.setAvatarUrl(avatarUrl.getOriginalFilename());
+        fileServiceImp.save(avatarUrl);
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Error update user " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void hide(Integer id) {
+        User user = userRepository.findByIdAndStatus(id,true);
+        user.setStatus(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void show(Integer id) {
+        User user = userRepository.findByIdAndStatus(id,false);
+        user.setStatus(true);
+        userRepository.save(user);
+    }
+
+    @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
+    @Override
+    public void delete(Integer id) {
+        User user = userRepository.findById(id).orElseThrow();
+//        fileServiceImp.delete(user.getAvatarUrl());
+        userRepository.deleteById(id);
     }
 }
