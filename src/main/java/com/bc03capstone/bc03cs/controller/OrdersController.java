@@ -1,13 +1,10 @@
 package com.bc03capstone.bc03cs.controller;
 
 import com.bc03capstone.bc03cs.DTO.OrdersDTO;
-import com.bc03capstone.bc03cs.DTO.SpeciesDTO;
-import com.bc03capstone.bc03cs.service.OrdersService;
 import com.bc03capstone.bc03cs.service.imp.OrdersServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin

@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer>, JpaSpecificationExecutor<CartItem> {
     List<CartItem> findAllByCartAndStatus(Cart cart, Boolean status);
+    List<CartItem> findAllByCart(Cart cart);
     CartItem findByIdAndStatus(Integer id, Boolean status);
 }
