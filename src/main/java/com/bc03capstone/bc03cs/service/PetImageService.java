@@ -21,10 +21,13 @@ import java.util.stream.Collectors;
 public class PetImageService implements PetImageServiceImp {
     @Autowired
     private PetImageRepository petImageRepository;
+
     @Autowired
     private PetRepository petRepository;
+
     @Autowired
     private FileServiceImp fileServiceImp;
+
     @Autowired
     private PetImageMapper petImageMapper;
 
@@ -54,6 +57,20 @@ public class PetImageService implements PetImageServiceImp {
         }
     }
 
+    @Override
+    public void hide(Integer id) {
+        PetImage petImage = petImageRepository.findByIdAndStatus(id,true);
+        petImage.setStatus(false);
+        petImageRepository.save(petImage);
+    }
+
+    @Override
+    public void show(Integer id) {
+        PetImage petImage = petImageRepository.findByIdAndStatus(id,false);
+        petImage.setStatus(true);
+        petImageRepository.save(petImage);
+    }
+
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {
@@ -61,5 +78,4 @@ public class PetImageService implements PetImageServiceImp {
 //        fileServiceImp.delete(petImage.getImageUrl());
         petImageRepository.delete(petImage);
     }
-
 }

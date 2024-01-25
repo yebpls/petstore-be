@@ -2,14 +2,16 @@ package com.bc03capstone.bc03cs.service;
 
 import com.bc03capstone.bc03cs.DTO.PetDTO;
 import com.bc03capstone.bc03cs.DTO.PetImageDTO;
+import com.bc03capstone.bc03cs.entity.CartItem;
+import com.bc03capstone.bc03cs.entity.OrderItem;
 import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.Species;
 import com.bc03capstone.bc03cs.mapper.PetMapper;
+import com.bc03capstone.bc03cs.repository.CartItemRepository;
+import com.bc03capstone.bc03cs.repository.OrderItemRepository;
 import com.bc03capstone.bc03cs.repository.PetRepository;
 import com.bc03capstone.bc03cs.repository.SpeciesRepository;
-import com.bc03capstone.bc03cs.service.imp.FileServiceImp;
-import com.bc03capstone.bc03cs.service.imp.PetImageServiceImp;
-import com.bc03capstone.bc03cs.service.imp.PetServiceImp;
+import com.bc03capstone.bc03cs.service.imp.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,18 @@ public class PetService implements PetServiceImp {
 
     @Autowired
     private FileServiceImp fileServiceImp;
+
+    @Autowired
+    private CartItemServiceImp cartItemServiceImp;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private OrderItemServiceImp orderItemServiceImp;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public List<PetDTO> findAll() {
@@ -98,6 +112,11 @@ public class PetService implements PetServiceImp {
     @Override
     public void hide(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,true);
+        pet.getPetImageList().forEach(petImage -> petImageServiceImp.hide(petImage.getId()));
+        CartItem cartItem = cartItemRepository.findByPet(pet);
+        if (cartItem!=null) cartItemServiceImp.hide(cartItem.getId());
+        OrderItem orderItem = orderItemRepository.findByPet(pet);
+        if (orderItem!=null) orderItemServiceImp.hide(orderItem.getId());
         pet.setStatus(false);
         petRepository.save(pet);
     }
@@ -105,6 +124,7 @@ public class PetService implements PetServiceImp {
     @Override
     public void show(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,false);
+        pet.getPetImageList().forEach(petImage -> petImageServiceImp.show(petImage.getId()));
         pet.setStatus(true);
         petRepository.save(pet);
     }
@@ -113,7 +133,11 @@ public class PetService implements PetServiceImp {
     @Override
     public void delete(Integer id) {
         Pet pet = petRepository.findById(id).orElseThrow();
-        pet.getPetImageList().forEach(item -> petImageServiceImp.delete(item.getId()));
+        pet.getPetImageList().forEach(petImage -> petImageServiceImp.delete(petImage.getId()));
+        CartItem cartItem = cartItemRepository.findByPet(pet);
+        if (cartItem!=null) cartItemServiceImp.delete(cartItem.getId());
+        OrderItem orderItem = orderItemRepository.findByPet(pet);
+        if (orderItem!=null) orderItemServiceImp.delete(orderItem.getId());
 //        fileServiceImp.delete(pet.getMainImage());
         petRepository.deleteById(id);
     }

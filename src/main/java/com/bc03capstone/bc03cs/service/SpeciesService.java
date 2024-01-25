@@ -59,6 +59,7 @@ public class SpeciesService implements SpeciesServiceImp {
     @Override
     public void hide(Integer id) {
         Species species = speciesRepository.findByIdAndStatus(id,true);
+        species.getPetList().forEach(pet -> petServiceImp.hide(pet.getId()));
         species.setStatus(false);
         speciesRepository.save(species);
     }
@@ -66,6 +67,7 @@ public class SpeciesService implements SpeciesServiceImp {
     @Override
     public void show(Integer id) {
         Species species = speciesRepository.findByIdAndStatus(id,false);
+        species.getPetList().forEach(pet -> petServiceImp.show(pet.getId()));
         species.setStatus(true);
         speciesRepository.save(species);
     }
@@ -74,7 +76,7 @@ public class SpeciesService implements SpeciesServiceImp {
     @Override
     public void delete(Integer id) {
         Species species = speciesRepository.findById(id).orElseThrow();
-        species.getPetList().forEach(item -> petServiceImp.delete(item.getId()));
+        species.getPetList().forEach(pet -> petServiceImp.delete(pet.getId()));
         speciesRepository.deleteById(id);
     }
 }
