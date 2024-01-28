@@ -4,7 +4,6 @@ import com.bc03capstone.bc03cs.DTO.UserDTO;
 import com.bc03capstone.bc03cs.entity.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +12,11 @@ public class UserMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Value("${domain}")
-    private String domain;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public UserDTO convertToDTO(User user) {
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        userDTO.setAvatarUrl(domain + "/file/" + user.getAvatarUrl());
-        return userDTO;
+        return modelMapper.map(user, UserDTO.class);
     }
 
     public User revertToEntity(UserDTO userDTO) {

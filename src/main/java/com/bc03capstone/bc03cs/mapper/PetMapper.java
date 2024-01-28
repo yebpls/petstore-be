@@ -5,7 +5,6 @@ import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.Species;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,12 +12,8 @@ public class PetMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Value("${domain}")
-    private String domain;
-
     public PetDTO convertToDTO(Pet pet) {
         PetDTO petDTO = modelMapper.map(pet, PetDTO.class);
-        petDTO.setMainImage(domain + "/file/" +pet.getMainImage());
         petDTO.setSpeciesID(pet.getSpecies().getId());
         return petDTO;
     }
