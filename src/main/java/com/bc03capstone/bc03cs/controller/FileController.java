@@ -17,7 +17,7 @@ public class FileController {
     @Autowired
     private FileServiceImp fileServiceImp;
 
-    @GetMapping("/download/{filename}")
+    @GetMapping("/{filename}")
     ResponseEntity<?> download(@PathVariable String filename) {
         Resource resource = fileServiceImp.download(filename);
         return ResponseEntity.ok()
