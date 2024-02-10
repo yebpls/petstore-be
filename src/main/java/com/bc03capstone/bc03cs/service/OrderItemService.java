@@ -1,13 +1,8 @@
 package com.bc03capstone.bc03cs.service;
 
 import com.bc03capstone.bc03cs.DTO.OrderItemDTO;
-import com.bc03capstone.bc03cs.DTO.OrdersDTO;
-import com.bc03capstone.bc03cs.DTO.PetDTO;
-import com.bc03capstone.bc03cs.DTO.PetImageDTO;
 import com.bc03capstone.bc03cs.entity.OrderItem;
 import com.bc03capstone.bc03cs.entity.Orders;
-import com.bc03capstone.bc03cs.entity.Pet;
-import com.bc03capstone.bc03cs.entity.Species;
 import com.bc03capstone.bc03cs.mapper.OrderItemMapper;
 import com.bc03capstone.bc03cs.repository.OrderItemRepository;
 import com.bc03capstone.bc03cs.repository.OrdersRepository;
@@ -16,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,10 +40,11 @@ public class OrderItemService implements OrderItemServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(OrderItemDTO orderItemDTO) {
+    public Integer add(OrderItemDTO orderItemDTO) {
         OrderItem newOrderItem = orderItemMapper.revertToEntity(orderItemDTO);
         try {
             orderItemRepository.save(newOrderItem);
+            return newOrderItem.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add orderItem " + e.getMessage());
         }
@@ -85,7 +78,6 @@ public class OrderItemService implements OrderItemServiceImp {
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {
-        OrderItem orderItem = orderItemRepository.findById(id).orElseThrow();
         orderItemRepository.deleteById(id);
     }
 }

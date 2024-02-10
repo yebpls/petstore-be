@@ -46,11 +46,12 @@ public class OrdersService implements OrdersServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(OrdersDTO ordersDTO) {
+    public Integer add(OrdersDTO ordersDTO) {
         Orders newOrders = ordersMapper.revertToEntity(ordersDTO);
         newOrders.setOrderTime(LocalDateTime.now());
         try {
             ordersRepository.save(newOrders);
+            return newOrders.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add Orders " + e.getMessage());
         }

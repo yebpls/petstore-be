@@ -41,10 +41,11 @@ public class CartItemService implements CartItemServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(CartItemDTO cartItemDTO) {
+    public Integer add(CartItemDTO cartItemDTO) {
         CartItem newCartItem = cartItemMapper.revertToEntity(cartItemDTO);
         try {
             cartItemRepository.save(newCartItem);
+            return newCartItem.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add cartItem " + e.getMessage());
         }

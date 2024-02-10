@@ -57,7 +57,6 @@ public class CartService implements CartServiceImp {
         cart.getCartItemList().forEach(cartItem -> cartItemServiceImp.hide(cartItem.getId()));
         cart.setStatus(false);
         cartRepository.save(cart);
-
     }
 
     @Override

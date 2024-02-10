@@ -36,10 +36,11 @@ public class SpeciesService implements SpeciesServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(SpeciesDTO speciesDTO) {
+    public Integer add(SpeciesDTO speciesDTO) {
         Species newSpecies = speciesMapper.revertToEntity(speciesDTO);
         try {
             speciesRepository.save(newSpecies);
+            return newSpecies.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add species " + e.getMessage());
         }

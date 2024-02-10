@@ -52,11 +52,12 @@ public class ShipLocationService implements ShipLocationServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(ShipLocationDTO shipLocationDTO) {
+    public Integer add(ShipLocationDTO shipLocationDTO) {
         ShipLocation newShiplocation = shipLocationMapper.revertToEntity(shipLocationDTO);
         if (newShiplocation.getIsDefault()) offDefault(newShiplocation.getUser().getId());
         try {
             shipLocationRepository.save(newShiplocation);
+            return newShiplocation.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add shipLocation " + e.getMessage());
         }

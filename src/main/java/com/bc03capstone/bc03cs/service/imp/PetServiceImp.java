@@ -9,7 +9,7 @@ public interface PetServiceImp {
     List<PetDTO> findAll();
     List<PetDTO> findAllBySpecies(Integer speciesId);
     PetDTO findById(Integer id);
-    void add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList);
+    Integer add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList);
     void update(PetDTO petDTO, MultipartFile mainImage);
     void sold(Integer id);
     void hide(Integer id);

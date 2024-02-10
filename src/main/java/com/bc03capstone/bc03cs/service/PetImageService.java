@@ -46,12 +46,13 @@ public class PetImageService implements PetImageServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(PetImageDTO petImageDTO, MultipartFile imageUrl) {
+    public Integer add(PetImageDTO petImageDTO, MultipartFile imageUrl) {
         PetImage newPetImage = petImageMapper.revertToEntity(petImageDTO);
         fileServiceImp.save(imageUrl);
         newPetImage.setImageUrl(imageUrl.getOriginalFilename());
         try {
             petImageRepository.save(newPetImage);
+            return newPetImage.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add petImage " + e.getMessage());
         }
