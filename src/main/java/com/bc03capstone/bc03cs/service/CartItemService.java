@@ -79,7 +79,6 @@ public class CartItemService implements CartItemServiceImp {
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {
-        CartItem cartItem = cartItemRepository.findById(id).orElseThrow();
         cartItemRepository.deleteById(id);
     }
 }
