@@ -21,42 +21,57 @@ import java.util.stream.Collectors;
 public class PetImageService implements PetImageServiceImp {
     @Autowired
     private PetImageRepository petImageRepository;
+
     @Autowired
     private PetRepository petRepository;
+
     @Autowired
     private FileServiceImp fileServiceImp;
+
     @Autowired
     private PetImageMapper petImageMapper;
 
     @Override
-    public List<PetImageDTO> getAllByStatusAndPetId(Integer petId) {
-        Pet pet = petRepository.findByStatusAndId(true, petId);
-        return petImageRepository.findAllByStatusAndPet(true, pet)
+    public List<PetImageDTO> findAllByPet(Integer petId) {
+        Pet pet = petRepository.findByIdAndStatus(petId,true);
+        return petImageRepository.findAllByPetAndStatus(pet,true)
                 .stream().map(petImageMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public PetImageDTO getByStatusAndId(Integer id) {
-        PetImage petImage = petImageRepository.findByStatusAndId(true, id);
+    public PetImageDTO findById(Integer id) {
+        PetImage petImage = petImageRepository.findByIdAndStatus(id,true);
         return petImageMapper.convertToDTO(petImage);
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(MultipartFile imageUrl, Integer petId) {
+    public Integer add(PetImageDTO petImageDTO, MultipartFile imageUrl) {
+        PetImage newPetImage = petImageMapper.revertToEntity(petImageDTO);
         fileServiceImp.save(imageUrl);
-        PetImage newPetImage = new PetImage();
         newPetImage.setImageUrl(imageUrl.getOriginalFilename());
-        newPetImage.setStatus(true);
-        Pet pet = new Pet();
-        pet.setId(petId);
-        newPetImage.setPet(pet);
         try {
             petImageRepository.save(newPetImage);
+            return newPetImage.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add petImage " + e.getMessage());
         }
     }
+
+    @Override
+    public void hide(Integer id) {
+        PetImage petImage = petImageRepository.findByIdAndStatus(id,true);
+        petImage.setStatus(false);
+        petImageRepository.save(petImage);
+    }
+
+    @Override
+    public void show(Integer id) {
+        PetImage petImage = petImageRepository.findByIdAndStatus(id,false);
+        petImage.setStatus(true);
+        petImageRepository.save(petImage);
+    }
+
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {
@@ -64,5 +79,4 @@ public class PetImageService implements PetImageServiceImp {
 //        fileServiceImp.delete(petImage.getImageUrl());
         petImageRepository.delete(petImage);
     }
-
 }

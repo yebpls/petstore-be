@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,13 +38,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf((csrf) -> csrf.disable())
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/login/**", "/api/test", "/swagger-ui/**", "/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/pet/**", "/api/petImage/**", "/api/species/**","/file/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/pet/**", "/api/petImage/**", "/api/species/**","/file/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/pet/**", "/api/petImage/**", "/api/species/**","/file/**").hasRole("ADMIN")
+                        .requestMatchers("/login/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**","/file/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/**","/file/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/**","/file/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

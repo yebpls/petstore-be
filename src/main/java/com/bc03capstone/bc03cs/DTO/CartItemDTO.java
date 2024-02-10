@@ -7,7 +7,6 @@ import java.io.Serializable;
 public class CartItemDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
-
     private Integer petId;
     private Integer cartId;
 }

@@ -1,16 +1,65 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.service.OrderItemService;
+import com.bc03capstone.bc03cs.DTO.OrderItemDTO;
+import com.bc03capstone.bc03cs.service.imp.OrderItemServiceImp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
-@Validated
 @RestController
 @RequestMapping("/api/orderItem")
 public class OrderItemController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private OrderItemService orderItemService;
+    private OrderItemServiceImp orderItemServiceImp;
+
+    @GetMapping("/findAllByOrders")
+    public ResponseEntity<?> findAllByOrders(@RequestParam Integer orderId) {
+        return new ResponseEntity<>(orderItemServiceImp.findAllByOrders(orderId), HttpStatus.OK);
+    }
+
+    @GetMapping("/findById")
+    public ResponseEntity<?> findById(@RequestParam Integer id) {
+        return new ResponseEntity<>(orderItemServiceImp.findById(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@RequestBody OrderItemDTO orderItemDTO) {
+        Integer id = orderItemServiceImp.add(orderItemDTO);
+        logger.info("Add orderItem id: " + id);
+        return new ResponseEntity<>("Add orderItem success", HttpStatus.OK);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> update(@RequestBody OrderItemDTO orderItemDTO) {
+        orderItemServiceImp.update(orderItemDTO);
+        logger.info("update orderItem id: " + orderItemDTO.getId());
+        return new ResponseEntity<>("update orderItem success", HttpStatus.OK);
+    }
+
+    @PostMapping("/hide/{id}")
+    public ResponseEntity<?> hide(@PathVariable Integer id) {
+        orderItemServiceImp.hide(id);
+        logger.info("hide orderItem id: " + id);
+        return new ResponseEntity<>("hide orderItem success", HttpStatus.OK);
+    }
+
+    @PostMapping("/show/{id}")
+    public ResponseEntity<?> show(@PathVariable Integer id) {
+        orderItemServiceImp.show(id);
+        logger.info("show orderItem id: " + id);
+        return new ResponseEntity<>("show orderItem success", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        orderItemServiceImp.delete(id);
+        logger.info("delete orderItem id: " + id);
+        return new ResponseEntity<>("delete orderItem success", HttpStatus.OK);
+    }
 }

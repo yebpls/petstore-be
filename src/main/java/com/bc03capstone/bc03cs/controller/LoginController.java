@@ -4,8 +4,6 @@ import com.bc03capstone.bc03cs.DTO.SignInRequest;
 import com.bc03capstone.bc03cs.entity.User;
 import com.bc03capstone.bc03cs.jwt.JwtHelper;
 import com.bc03capstone.bc03cs.payload.BaseResponse;
-import com.bc03capstone.bc03cs.repository.PetRepository;
-import com.bc03capstone.bc03cs.service.LoginService;
 import com.bc03capstone.bc03cs.service.imp.LoginServiceImp;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -30,8 +28,11 @@ public class LoginController {
 
     @Autowired
     private JwtHelper jwtHelper;
-    private Logger logger = LoggerFactory.getLogger(LoginController.class);
-    private Gson gson = new Gson();
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final Gson gson = new Gson();
+
     @PostMapping("")
     public ResponseEntity<?> login() {
         String data = jwtHelper.decodeToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJbe1wicm9sZVwiOlwiUk9MRV9BRE1JTlwifV0iLCJleHAiOjE3MDk1NDIxNzZ9.OHy4ZdESpe_vBwn5lMo2ZmpmsHiM-sNCeDeip84K8jc");
@@ -41,24 +42,14 @@ public class LoginController {
     public ResponseEntity<?> signin(@RequestBody SignInRequest signInRequest) {
         String email = signInRequest.getEmail();
         String password = signInRequest.getPassword();
-        logger.info("Username: " + email);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
         Authentication authentication = authenticationManager.authenticate(token);
-        logger.info("authentication: " + authentication);
         User user = loginServiceImp.checkLogin(email, password);
-//        System.out.println(user);
         String json = gson.toJson(authentication.getAuthorities());
         String jwtToken = jwtHelper.generateToken(json, user.getRole(), user.getId());
-        logger.info("Response: " + jwtToken);
+        logger.info("token login: " + jwtToken);
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setData(jwtToken);
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
-    }
-    @Autowired
-    PetRepository petRepository;
-    @GetMapping("")
-    public ResponseEntity<?> check() {
-        petRepository.findAll();
-        return new ResponseEntity<>("admin oke", HttpStatus.OK);
     }
 }

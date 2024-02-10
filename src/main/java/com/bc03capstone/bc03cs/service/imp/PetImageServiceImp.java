@@ -8,11 +8,10 @@ import java.util.List;
 
 
 public interface PetImageServiceImp {
-    List<PetImageDTO> getAllByStatusAndPetId(Integer petId);
-
-    PetImageDTO getByStatusAndId(Integer id);
-
-    void add(MultipartFile imageUrl, Integer petId);
-
+    List<PetImageDTO> findAllByPet(Integer petId);
+    PetImageDTO findById(Integer id);
+    Integer add(PetImageDTO petImageDTO, MultipartFile imageUrl);
+    void hide(Integer id);
+    void show(Integer id);
     void delete(Integer id);
 }

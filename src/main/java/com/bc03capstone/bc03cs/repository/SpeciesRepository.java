@@ -10,5 +10,5 @@ import java.util.List;
 public interface SpeciesRepository extends JpaRepository<Species, Integer> {
     List<Species> findAllByStatus(Boolean status);
 
-    Species findByStatusAndId(Boolean status, Integer id);
+    Species findByIdAndStatus(Integer id, Boolean status);
 }

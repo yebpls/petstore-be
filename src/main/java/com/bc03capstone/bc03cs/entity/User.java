@@ -31,6 +31,8 @@ public class User implements Serializable {
     private String password;
     @Column(name = "role")
     private String role;
+    @Column(name = "country")
+    private String country;
     @Column(name = "status")
     private boolean status;
 

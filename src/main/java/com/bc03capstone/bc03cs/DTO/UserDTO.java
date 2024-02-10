@@ -3,7 +3,6 @@ package com.bc03capstone.bc03cs.DTO;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 @Data
 public class UserDTO implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -17,8 +16,5 @@ public class UserDTO implements Serializable {
     private String phoneNumber;
     private String password;
     private String role;
-
-    private Integer cartId;
-    private List<Integer> shipLocationIdList;
-    private List<Integer> orderIdList;
+    private String country;
 }
