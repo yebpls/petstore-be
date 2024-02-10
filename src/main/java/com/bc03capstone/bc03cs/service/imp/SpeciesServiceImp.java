@@ -7,7 +7,7 @@ import java.util.List;
 public interface SpeciesServiceImp {
     List<SpeciesDTO> findAll();
     SpeciesDTO findById(Integer id);
-    void add(SpeciesDTO speciesDTO);
+    Integer add(SpeciesDTO speciesDTO);
     void update(SpeciesDTO speciesDTO);
     void hide(Integer id);
     void show(Integer id);

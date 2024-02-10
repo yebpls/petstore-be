@@ -8,7 +8,7 @@ public interface ShipLocationServiceImp {
     List<ShipLocationDTO> findAllByUser(Integer userId);
     ShipLocationDTO findByUserAndIsDefault(Integer userId);
     ShipLocationDTO findById(Integer id);
-    void add(ShipLocationDTO shipLocationDTO);
+    Integer add(ShipLocationDTO shipLocationDTO);
     void changeDefault(Integer userId, Integer shipLocationId);
     void update(ShipLocationDTO shipLocationDTO);
     void hide(Integer id);

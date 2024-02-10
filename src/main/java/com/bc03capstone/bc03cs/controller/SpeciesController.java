@@ -2,6 +2,8 @@ package com.bc03capstone.bc03cs.controller;
 
 import com.bc03capstone.bc03cs.DTO.SpeciesDTO;
 import com.bc03capstone.bc03cs.service.imp.SpeciesServiceImp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/species")
 public class SpeciesController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private SpeciesServiceImp speciesServiceImp;
 
@@ -26,31 +30,36 @@ public class SpeciesController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody SpeciesDTO speciesDTO) {
-        speciesServiceImp.add(speciesDTO);
+        Integer id = speciesServiceImp.add(speciesDTO);
+        logger.info("add species id: " + id);
         return new ResponseEntity<>("Add species success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<?> update(@RequestBody SpeciesDTO speciesDTO) {
         speciesServiceImp.update(speciesDTO);
+        logger.info("update species id: " + speciesDTO.getId());
         return new ResponseEntity<>("update species success", HttpStatus.OK);
     }
 
     @PostMapping("/hide/{id}")
     public ResponseEntity<?> hide(@PathVariable Integer id) {
         speciesServiceImp.hide(id);
+        logger.info("hide species id: " + id);
         return new ResponseEntity<>("hide species success", HttpStatus.OK);
     }
 
     @PostMapping("/show/{id}")
     public ResponseEntity<?> show(@PathVariable Integer id) {
         speciesServiceImp.show(id);
+        logger.info("show species id: " + id);
         return new ResponseEntity<>("show species success", HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         speciesServiceImp.delete(id);
+        logger.info("delete species id: " + id);
         return new ResponseEntity<>("delete Species success", HttpStatus.OK);
     }
 }

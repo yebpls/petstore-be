@@ -71,20 +71,21 @@ public class PetService implements PetServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList) {
+    public Integer add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList) {
         Pet newPet = petMapper.revertToEntity(petDTO);
         newPet.setUploadDate(LocalDate.now());
         newPet.setMainImage(mainImage.getOriginalFilename());
         fileServiceImp.save(mainImage);
         try {
             petRepository.save(newPet);
+            for (MultipartFile imageUrl : imageUrlList) {
+                PetImageDTO petImageDTO = new PetImageDTO();
+                petImageDTO.setPetId(newPet.getId());
+                petImageServiceImp.add(petImageDTO, imageUrl);
+            }
+            return newPet.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add pet " + e.getMessage());
-        }
-        for (MultipartFile imageUrl : imageUrlList) {
-            PetImageDTO petImageDTO = new PetImageDTO();
-            petImageDTO.setPetId(newPet.getId());
-            petImageServiceImp.add(petImageDTO, imageUrl);
         }
     }
 

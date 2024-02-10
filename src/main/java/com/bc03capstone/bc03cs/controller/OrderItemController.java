@@ -2,6 +2,8 @@ package com.bc03capstone.bc03cs.controller;
 
 import com.bc03capstone.bc03cs.DTO.OrderItemDTO;
 import com.bc03capstone.bc03cs.service.imp.OrderItemServiceImp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/orderItem")
 public class OrderItemController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private OrderItemServiceImp orderItemServiceImp;
@@ -27,31 +30,36 @@ public class OrderItemController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody OrderItemDTO orderItemDTO) {
-        orderItemServiceImp.add(orderItemDTO);
+        Integer id = orderItemServiceImp.add(orderItemDTO);
+        logger.info("Add orderItem id: " + id);
         return new ResponseEntity<>("Add orderItem success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<?> update(@RequestBody OrderItemDTO orderItemDTO) {
         orderItemServiceImp.update(orderItemDTO);
+        logger.info("update orderItem id: " + orderItemDTO.getId());
         return new ResponseEntity<>("update orderItem success", HttpStatus.OK);
     }
 
     @PostMapping("/hide/{id}")
     public ResponseEntity<?> hide(@PathVariable Integer id) {
         orderItemServiceImp.hide(id);
+        logger.info("hide orderItem id: " + id);
         return new ResponseEntity<>("hide orderItem success", HttpStatus.OK);
     }
 
     @PostMapping("/show/{id}")
     public ResponseEntity<?> show(@PathVariable Integer id) {
         orderItemServiceImp.show(id);
+        logger.info("show orderItem id: " + id);
         return new ResponseEntity<>("show orderItem success", HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         orderItemServiceImp.delete(id);
+        logger.info("delete orderItem id: " + id);
         return new ResponseEntity<>("delete orderItem success", HttpStatus.OK);
     }
 }

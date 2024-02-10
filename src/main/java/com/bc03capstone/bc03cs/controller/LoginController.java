@@ -29,7 +29,7 @@ public class LoginController {
     @Autowired
     private JwtHelper jwtHelper;
 
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Gson gson = new Gson();
 
@@ -47,7 +47,7 @@ public class LoginController {
         User user = loginServiceImp.checkLogin(email, password);
         String json = gson.toJson(authentication.getAuthorities());
         String jwtToken = jwtHelper.generateToken(json, user.getRole(), user.getId());
-        logger.info("Response: " + jwtToken);
+        logger.info("token login: " + jwtToken);
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setData(jwtToken);
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);

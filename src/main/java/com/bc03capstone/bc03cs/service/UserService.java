@@ -40,7 +40,7 @@ public class UserService implements UserServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void add(UserDTO userDTO, MultipartFile avatarUrl) {
+    public Integer add(UserDTO userDTO, MultipartFile avatarUrl) {
         User newUser = userMapper.revertToEntity(userDTO);
         newUser.setCreateDate(LocalDate.now());
         newUser.setAvatarUrl(avatarUrl.getOriginalFilename());
@@ -48,6 +48,7 @@ public class UserService implements UserServiceImp {
         try {
             userRepository.save(newUser);
             cartServiceImp.add(newUser);
+            return newUser.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add user " + e.getMessage());
         }
