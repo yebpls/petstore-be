@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 public class LoginService implements LoginServiceImp {
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository userRepository;
+
     @Override
     public User checkLogin(String email, String password) {
         User user = userRepository.findByEmail(email);

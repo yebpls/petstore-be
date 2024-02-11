@@ -16,8 +16,6 @@ import javax.crypto.SecretKey;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 @SecurityScheme(name = "Authorization", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class Bc03csApplication {
-
-
 	public static void main(String[] args) {
 //		Tạo key dùng mã hóa cho token
 //		SecretKey key = Jwts.SIG.HS256.key().build();
@@ -25,5 +23,4 @@ public class Bc03csApplication {
 //		System.out.println("key: " + strKey);
 		SpringApplication.run(Bc03csApplication.class, args);
 	}
-
 }

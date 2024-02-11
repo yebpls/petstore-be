@@ -13,6 +13,8 @@ import com.bc03capstone.bc03cs.repository.PetRepository;
 import com.bc03capstone.bc03cs.repository.SpeciesRepository;
 import com.bc03capstone.bc03cs.service.imp.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,12 +52,14 @@ public class PetService implements PetServiceImp {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Cacheable("petList")
     @Override
     public List<PetDTO> findAll() {
         return petRepository.findAllByIsSoldAndStatus(false, true)
                 .stream().map(petMapper::convertToDTO).collect(Collectors.toList());
     }
 
+    @Cacheable("petListBySpecies")
     @Override
     public List<PetDTO> findAllBySpecies(Integer speciesId) {
         Species species = speciesRepository.findByIdAndStatus(speciesId,true);
@@ -69,6 +73,7 @@ public class PetService implements PetServiceImp {
         return petMapper.convertToDTO(pet);
     }
 
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public Integer add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList) {
@@ -89,6 +94,7 @@ public class PetService implements PetServiceImp {
         }
     }
 
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void update(PetDTO petDTO, MultipartFile mainImage) {
@@ -103,6 +109,7 @@ public class PetService implements PetServiceImp {
         }
     }
 
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void sold(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,true);
@@ -110,6 +117,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void hide(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,true);
@@ -122,6 +130,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void show(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,false);
@@ -130,6 +139,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {
