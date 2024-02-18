@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.UserDTO;
 import com.bc03capstone.bc03cs.service.imp.UserServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +25,19 @@ public class UserController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(
-            @RequestPart(value = "userDTO") UserDTO userDTO,
+            @RequestPart(value = "userDTO") String jsonString,
             @RequestPart(value = "avatarUrl") MultipartFile avatarUrl) {
-        Integer id = userServiceImp.add(userDTO, avatarUrl);
+        Integer id = userServiceImp.add(jsonString, avatarUrl);
         logger.info("add user id: " + id);
         return new ResponseEntity<>("Add user success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<?> update(
-            @RequestPart(value = "userDTO") UserDTO userDTO,
+            @RequestPart(value = "userDTO") String jsonString,
             @RequestPart(value = "avatarUrl") MultipartFile avatarUrl) {
-        userServiceImp.update(userDTO, avatarUrl);
-        logger.info("update user id: " + userDTO.getId());
+        Integer id = userServiceImp.update(jsonString, avatarUrl);
+        logger.info("update user id: " + id);
         return new ResponseEntity<>("update user success", HttpStatus.OK);
     }
 

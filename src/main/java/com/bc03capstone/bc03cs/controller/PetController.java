@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.PetDTO;
 import com.bc03capstone.bc03cs.service.imp.PetServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 
 @CrossOrigin
 @RestController
@@ -20,7 +18,7 @@ public class PetController {
     @Autowired
     private PetServiceImp petServiceImp;
 
-    @GetMapping("findAll")
+    @GetMapping("")
     public ResponseEntity<?> findAll() {
         return new ResponseEntity<>(petServiceImp.findAll(), HttpStatus.OK);
     }
@@ -37,20 +35,20 @@ public class PetController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(
-            @RequestPart(value = "petDTO") PetDTO petDTO,
+            @RequestPart(value = "petDTO") String jsonString,
             @RequestPart(value = "mainImage") MultipartFile mainImage,
             @RequestPart(value = "imageUrlList") MultipartFile[] imageUrlList) {
-        Integer id = petServiceImp.add(petDTO, mainImage, imageUrlList);
+        Integer id = petServiceImp.add(jsonString, mainImage, imageUrlList);
         logger.info("Add pet id: " + id);
         return new ResponseEntity<>("Add pet success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<?> update(
-            @RequestPart(value = "petDTO") PetDTO petDTO,
+            @RequestPart(value = "petDTO") String jsonString,
             @RequestPart(value = "mainImage") MultipartFile mainImage) {
-        petServiceImp.update(petDTO, mainImage);
-        logger.info("update pet id: " + petDTO.getId());
+        Integer id = petServiceImp.update(jsonString, mainImage);
+        logger.info("update pet id: " + id);
         return new ResponseEntity<>("update pet success", HttpStatus.OK);
     }
 

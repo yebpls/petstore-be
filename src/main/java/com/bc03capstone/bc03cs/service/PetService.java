@@ -1,7 +1,6 @@
 package com.bc03capstone.bc03cs.service;
 
 import com.bc03capstone.bc03cs.DTO.PetDTO;
-import com.bc03capstone.bc03cs.DTO.PetImageDTO;
 import com.bc03capstone.bc03cs.entity.CartItem;
 import com.bc03capstone.bc03cs.entity.OrderItem;
 import com.bc03capstone.bc03cs.entity.Pet;
@@ -52,14 +51,19 @@ public class PetService implements PetServiceImp {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
-    @Cacheable("petList")
+//    @Cacheable("petList")
     @Override
     public List<PetDTO> findAll() {
+        try {
+            Thread.sleep(1000); // Delay 1 giây (1000 milliseconds)
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return petRepository.findAllByIsSoldAndStatus(false, true)
                 .stream().map(petMapper::convertToDTO).collect(Collectors.toList());
     }
 
-    @Cacheable("petListBySpecies")
+//    @Cacheable("petListBySpecies")
     @Override
     public List<PetDTO> findAllBySpecies(Integer speciesId) {
         Species species = speciesRepository.findByIdAndStatus(speciesId,true);
@@ -73,20 +77,18 @@ public class PetService implements PetServiceImp {
         return petMapper.convertToDTO(pet);
     }
 
-    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public Integer add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList) {
-        Pet newPet = petMapper.revertToEntity(petDTO);
+    public Integer add(String jsonString, MultipartFile mainImage, MultipartFile[] imageUrlList) {
+        Pet newPet = petMapper.revertToEntity(jsonString);
         newPet.setUploadDate(LocalDate.now());
         newPet.setMainImage(mainImage.getOriginalFilename());
         fileServiceImp.save(mainImage);
         try {
             petRepository.save(newPet);
             for (MultipartFile imageUrl : imageUrlList) {
-                PetImageDTO petImageDTO = new PetImageDTO();
-                petImageDTO.setPetId(newPet.getId());
-                petImageServiceImp.add(petImageDTO, imageUrl);
+                petImageServiceImp.add(newPet.getId(), imageUrl);
             }
             return newPet.getId();
         } catch (Exception e) {
@@ -94,22 +96,23 @@ public class PetService implements PetServiceImp {
         }
     }
 
-    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void update(PetDTO petDTO, MultipartFile mainImage) {
-        Pet pet = petMapper.revertToEntity(petDTO);
+    public Integer update(String jsonString, MultipartFile mainImage) {
+        Pet pet = petMapper.revertToEntity(jsonString);
 //        fileServiceImp.delete(pet.getMainImage());  //delete old mainImage file in folder
         pet.setMainImage(mainImage.getOriginalFilename());
         fileServiceImp.save(mainImage);
         try {
             petRepository.save(pet);
+            return pet.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error update pet " + e.getMessage());
         }
     }
 
-    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void sold(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,true);
@@ -117,7 +120,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
-    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void hide(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,true);
@@ -130,7 +133,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
-    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void show(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,false);
@@ -139,7 +142,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
-    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {

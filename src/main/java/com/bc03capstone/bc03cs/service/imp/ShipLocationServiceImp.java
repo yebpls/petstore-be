@@ -8,9 +8,9 @@ public interface ShipLocationServiceImp {
     List<ShipLocationDTO> findAllByUser(Integer userId);
     ShipLocationDTO findByUserAndIsDefault(Integer userId);
     ShipLocationDTO findById(Integer id);
-    Integer add(ShipLocationDTO shipLocationDTO);
+    Integer add(String jsonString);
     void changeDefault(Integer userId, Integer shipLocationId);
-    void update(ShipLocationDTO shipLocationDTO);
+    Integer update(String jsonString);
     void hide(Integer id);
     void show(Integer id);
     void delete(Integer id);

@@ -40,8 +40,8 @@ public class UserService implements UserServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public Integer add(UserDTO userDTO, MultipartFile avatarUrl) {
-        User newUser = userMapper.revertToEntity(userDTO);
+    public Integer add(String jsonString, MultipartFile avatarUrl) {
+        User newUser = userMapper.revertToEntity(jsonString);
         newUser.setCreateDate(LocalDate.now());
         newUser.setAvatarUrl(avatarUrl.getOriginalFilename());
         fileServiceImp.save(avatarUrl);
@@ -56,13 +56,14 @@ public class UserService implements UserServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void update(UserDTO userDTO, MultipartFile avatarUrl) {
-        User user = userMapper.revertToEntity(userDTO);
+    public Integer update(String jsonString, MultipartFile avatarUrl) {
+        User user = userMapper.revertToEntity(jsonString);
 //        fileServiceImp.delete(user.getAvatarUrl());  //delete old mainImage file in folder
         user.setAvatarUrl(avatarUrl.getOriginalFilename());
         fileServiceImp.save(avatarUrl);
         try {
             userRepository.save(user);
+            return user.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error update user " + e.getMessage());
         }

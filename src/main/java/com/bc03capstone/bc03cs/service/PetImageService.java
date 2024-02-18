@@ -32,7 +32,7 @@ public class PetImageService implements PetImageServiceImp {
     @Autowired
     private PetImageMapper petImageMapper;
 
-    @Cacheable("petImageList")
+//    @Cacheable("petImageList")
     @Override
     public List<PetImageDTO> findAllByPet(Integer petId) {
         Pet pet = petRepository.findByIdAndStatus(petId,true);
@@ -46,11 +46,15 @@ public class PetImageService implements PetImageServiceImp {
         return petImageMapper.convertToDTO(petImage);
     }
 
-    @CacheEvict("petImageList")
+//    @CacheEvict("petImageList")
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public Integer add(PetImageDTO petImageDTO, MultipartFile imageUrl) {
-        PetImage newPetImage = petImageMapper.revertToEntity(petImageDTO);
+    public Integer add(Integer petId, MultipartFile imageUrl) {
+        PetImage newPetImage = new PetImage();
+        Pet pet = new Pet();
+        pet.setId(petId);
+        newPetImage.setPet(pet);
+        newPetImage.setStatus(true);
         fileServiceImp.save(imageUrl);
         newPetImage.setImageUrl(imageUrl.getOriginalFilename());
         try {
@@ -61,7 +65,7 @@ public class PetImageService implements PetImageServiceImp {
         }
     }
 
-    @CacheEvict("petImageList")
+//    @CacheEvict("petImageList")
     @Override
     public void hide(Integer id) {
         PetImage petImage = petImageRepository.findByIdAndStatus(id,true);
@@ -69,7 +73,7 @@ public class PetImageService implements PetImageServiceImp {
         petImageRepository.save(petImage);
     }
 
-    @CacheEvict("petImageList")
+//    @CacheEvict("petImageList")
     @Override
     public void show(Integer id) {
         PetImage petImage = petImageRepository.findByIdAndStatus(id,false);
@@ -77,7 +81,7 @@ public class PetImageService implements PetImageServiceImp {
         petImageRepository.save(petImage);
     }
 
-    @CacheEvict("petImageList")
+//    @CacheEvict("petImageList")
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {

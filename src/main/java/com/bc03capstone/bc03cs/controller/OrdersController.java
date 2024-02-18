@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.OrdersDTO;
 import com.bc03capstone.bc03cs.service.imp.OrdersServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +28,16 @@ public class OrdersController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody OrdersDTO ordersDTO) {
-        Integer id = ordersServiceImp.add(ordersDTO);
+    public ResponseEntity<?> add(@RequestBody String jsonString) {
+        Integer id = ordersServiceImp.add(jsonString);
         logger.info("Add orders id: " + id);
         return new ResponseEntity<>("Add orders success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> update(@RequestBody OrdersDTO ordersDTO) {
-        ordersServiceImp.update(ordersDTO);
-        logger.info("update orders id: " + ordersDTO.getId());
+    public ResponseEntity<?> update(@RequestBody String jsonString) {
+        Integer id = ordersServiceImp.update(jsonString);
+        logger.info("update orders id: " + id);
         return new ResponseEntity<>("update orders success", HttpStatus.OK);
     }
 

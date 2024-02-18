@@ -51,12 +51,12 @@ public class ShipLocationService implements ShipLocationServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public Integer add(ShipLocationDTO shipLocationDTO) {
-        ShipLocation newShiplocation = shipLocationMapper.revertToEntity(shipLocationDTO);
-        if (newShiplocation.getIsDefault()) offDefault(newShiplocation.getUser().getId());
+    public Integer add(String jsonString) {
+        ShipLocation newShipLocation = shipLocationMapper.revertToEntity(jsonString);
+        if (newShipLocation.getIsDefault()) offDefault(newShipLocation.getUser().getId());
         try {
-            shipLocationRepository.save(newShiplocation);
-            return newShiplocation.getId();
+            shipLocationRepository.save(newShipLocation);
+            return newShipLocation.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error add shipLocation " + e.getMessage());
         }
@@ -66,7 +66,11 @@ public class ShipLocationService implements ShipLocationServiceImp {
         User user = userRepository.findByIdAndStatus(userId,true);
         ShipLocation shipLocation = shipLocationRepository.findByUserAndIsDefaultAndStatus(user,true,true);
         shipLocation.setIsDefault(false);
-        shipLocationRepository.save(shipLocation);
+        try {
+            shipLocationRepository.save(shipLocation);
+        } catch (Exception e) {
+            throw new RuntimeException("Error offDefault " + e.getMessage());
+        }
     }
 
     @Override
@@ -74,15 +78,19 @@ public class ShipLocationService implements ShipLocationServiceImp {
         offDefault(userId);
         ShipLocation shipLocation = shipLocationRepository.findByIdAndStatus(shipLocationId,true);
         shipLocation.setIsDefault(true);
-        shipLocationRepository.save(shipLocation);
+        try {
+            shipLocationRepository.save(shipLocation);
+        } catch (Exception e) {
+            throw new RuntimeException("Error changeDefault " + e.getMessage());
+        }
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void update(ShipLocationDTO shipLocationDTO) {
+    public Integer update(String jsonString) {
         try {
-            ShipLocation newShipLocation = shipLocationMapper.revertToEntity(shipLocationDTO);
-            ShipLocation oldShipLocation = shipLocationRepository.findByIdAndStatus(shipLocationDTO.getId(), true);
+            ShipLocation newShipLocation = shipLocationMapper.revertToEntity(jsonString);
+            ShipLocation oldShipLocation = shipLocationRepository.findByIdAndStatus(newShipLocation.getId(), true);
             if (oldShipLocation.getIsDefault()) newShipLocation.setIsDefault(true);
             if (newShipLocation.getIsDefault()) offDefault(newShipLocation.getUser().getId());
             if (ordersRepository.findByShipLocation(oldShipLocation)!=null) {
@@ -93,8 +101,9 @@ public class ShipLocationService implements ShipLocationServiceImp {
                 shipLocationRepository.save(oldShipLocation);
             }
             shipLocationRepository.save(newShipLocation);
+            return newShipLocation.getId();
         } catch (Exception e) {
-            throw new RuntimeException("Error update information shipLocation " + e.getMessage());
+            throw new RuntimeException("Error update shipLocation " + e.getMessage());
         }
     }
 
