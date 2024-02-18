@@ -45,8 +45,8 @@ public class OrdersService implements OrdersServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public Integer add(OrdersDTO ordersDTO) {
-        Orders newOrders = ordersMapper.revertToEntity(ordersDTO);
+    public Integer add(String jsonString) {
+        Orders newOrders = ordersMapper.revertToEntity(jsonString);
         newOrders.setOrderTime(LocalDateTime.now());
         try {
             ordersRepository.save(newOrders);
@@ -58,10 +58,11 @@ public class OrdersService implements OrdersServiceImp {
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void update(OrdersDTO ordersDTO) {
-        Orders orders = ordersMapper.revertToEntity(ordersDTO);
+    public Integer update(String jsonString) {
+        Orders orders = ordersMapper.revertToEntity(jsonString);
         try {
             ordersRepository.save(orders);
+            return orders.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error update Orders " + e.getMessage());
         }

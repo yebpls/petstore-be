@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.ShipLocationDTO;
 import com.bc03capstone.bc03cs.service.imp.ShipLocationServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +33,8 @@ public class ShipLocationController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ShipLocationDTO shipLocationDTO) {
-        Integer id = shipLocationServiceImp.add(shipLocationDTO);
+    public ResponseEntity<?> add(@RequestBody String jsonString) {
+        Integer id = shipLocationServiceImp.add(jsonString);
         logger.info("add shipLocation id: " + id);
         return new ResponseEntity<>("Add shipLocation success", HttpStatus.OK);
     }
@@ -50,9 +49,9 @@ public class ShipLocationController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> update(@RequestBody ShipLocationDTO shipLocationDTO) {
-        shipLocationServiceImp.update(shipLocationDTO);
-        logger.info("update shipLocation id: " + shipLocationDTO.getId());
+    public ResponseEntity<?> update(@RequestBody String jsonString) {
+        Integer id = shipLocationServiceImp.update(jsonString);
+        logger.info("update shipLocation id: " + id);
         return new ResponseEntity<>("update shipLocation success", HttpStatus.OK);
     }
 

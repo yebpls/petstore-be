@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.SpeciesDTO;
 import com.bc03capstone.bc03cs.service.imp.SpeciesServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +28,16 @@ public class SpeciesController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody SpeciesDTO speciesDTO) {
-        Integer id = speciesServiceImp.add(speciesDTO);
+    public ResponseEntity<?> add(@RequestBody String jsonString) {
+        Integer id = speciesServiceImp.add(jsonString);
         logger.info("add species id: " + id);
         return new ResponseEntity<>("Add species success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> update(@RequestBody SpeciesDTO speciesDTO) {
-        speciesServiceImp.update(speciesDTO);
-        logger.info("update species id: " + speciesDTO.getId());
+    public ResponseEntity<?> update(@RequestBody String jsonString) {
+        Integer id = speciesServiceImp.update(jsonString);
+        logger.info("update species id: " + id);
         return new ResponseEntity<>("update species success", HttpStatus.OK);
     }
 

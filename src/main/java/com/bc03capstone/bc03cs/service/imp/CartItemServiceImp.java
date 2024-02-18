@@ -7,8 +7,8 @@ import java.util.List;
 public interface CartItemServiceImp {
     List<CartItemDTO> findAllByCart(Integer cartId);
     CartItemDTO findById(Integer id);
-    Integer add(CartItemDTO cartItemDTO);
-    void update(CartItemDTO cartItemDTO);
+    Integer add(String jsonString);
+    Integer update(String jsonString);
     void hide(Integer id);
     void show(Integer id);
     void delete(Integer id);

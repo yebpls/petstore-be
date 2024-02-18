@@ -9,8 +9,8 @@ public interface PetServiceImp {
     List<PetDTO> findAll();
     List<PetDTO> findAllBySpecies(Integer speciesId);
     PetDTO findById(Integer id);
-    Integer add(PetDTO petDTO, MultipartFile mainImage, MultipartFile[] imageUrlList);
-    void update(PetDTO petDTO, MultipartFile mainImage);
+    Integer add(String jsonString, MultipartFile mainImage, MultipartFile[] imageUrlList);
+    Integer update(String jsonString, MultipartFile mainImage);
     void sold(Integer id);
     void hide(Integer id);
     void show(Integer id);

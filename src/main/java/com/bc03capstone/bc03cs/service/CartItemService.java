@@ -27,12 +27,15 @@ public class CartItemService implements CartItemServiceImp {
     @Autowired
     private CartItemMapper cartItemMapper;
 
-    @Cacheable("cartItemList")
+//    @Cacheable(value = "cartItemList", key = "#cartId")
     @Override
     public List<CartItemDTO> findAllByCart(Integer cartId) {
         Cart cart = cartRepository.findByIdAndStatus(cartId,true);
-//        long time = 1000L;       //test cache
-//        Thread.sleep(time);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return cartItemRepository.findAllByCartAndStatus(cart,true)
                 .stream().map(cartItemMapper::convertToDTO).collect(Collectors.toList());
     }
@@ -43,11 +46,11 @@ public class CartItemService implements CartItemServiceImp {
         return cartItemMapper.convertToDTO(cartItem);
     }
 
-    @CacheEvict("cartItemList")
+//    @CacheEvict(value = "cartItemList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public Integer add(CartItemDTO cartItemDTO) {
-        CartItem newCartItem = cartItemMapper.revertToEntity(cartItemDTO);
+    public Integer add(String jsonString) {
+        CartItem newCartItem = cartItemMapper.revertToEntity(jsonString);
         try {
             cartItemRepository.save(newCartItem);
             return newCartItem.getId();
@@ -56,19 +59,20 @@ public class CartItemService implements CartItemServiceImp {
         }
     }
 
-    @CacheEvict("cartItemList")
+//    @CacheEvict(value = "cartItemList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void update(CartItemDTO cartItemDTO) {
-        CartItem cartItem = cartItemMapper.revertToEntity(cartItemDTO);
+    public Integer update(String jsonString) {
+        CartItem cartItem = cartItemMapper.revertToEntity(jsonString);
         try {
             cartItemRepository.save(cartItem);
+            return cartItem.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error update cartItem " + e.getMessage());
         }
     }
 
-    @CacheEvict("cartItemList")
+//    @CacheEvict(value = "cartItemList", allEntries = true)
     @Override
     public void hide(Integer id) {
         CartItem cartItem = cartItemRepository.findByIdAndStatus(id,true);
@@ -76,7 +80,7 @@ public class CartItemService implements CartItemServiceImp {
         cartItemRepository.save(cartItem);
     }
 
-    @CacheEvict("cartItemList")
+//    @CacheEvict(value = "cartItemList", allEntries = true)
     @Override
     public void show(Integer id) {
         CartItem cartItem = cartItemRepository.findByIdAndStatus(id,false);
@@ -84,7 +88,7 @@ public class CartItemService implements CartItemServiceImp {
         cartItemRepository.save(cartItem);
     }
 
-    @CacheEvict("cartItemList")
+//    @CacheEvict(value = "cartItemList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {
