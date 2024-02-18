@@ -7,9 +7,10 @@ import com.bc03capstone.bc03cs.repository.SpeciesRepository;
 import com.bc03capstone.bc03cs.service.imp.PetServiceImp;
 import com.bc03capstone.bc03cs.service.imp.SpeciesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,11 +18,14 @@ import java.util.stream.Collectors;
 public class SpeciesService implements SpeciesServiceImp {
     @Autowired
     private SpeciesRepository speciesRepository;
+
     @Autowired
     SpeciesMapper speciesMapper;
+
     @Autowired
     private PetServiceImp petServiceImp;
 
+//    @Cacheable("speciesList")
     @Override
     public List<SpeciesDTO> findAll() {
         return speciesRepository.findAllByStatus(true)
@@ -34,10 +38,11 @@ public class SpeciesService implements SpeciesServiceImp {
         return speciesMapper.convertToDTO(species);
     }
 
+//    @CacheEvict("speciesList")
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public Integer add(SpeciesDTO speciesDTO) {
-        Species newSpecies = speciesMapper.revertToEntity(speciesDTO);
+    public Integer add(String jsonString) {
+        Species newSpecies = speciesMapper.revertToEntity(jsonString);
         try {
             speciesRepository.save(newSpecies);
             return newSpecies.getId();
@@ -46,17 +51,20 @@ public class SpeciesService implements SpeciesServiceImp {
         }
     }
 
+//    @CacheEvict("speciesList")
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
-    public void update(SpeciesDTO speciesDTO) {
-        Species species = speciesMapper.revertToEntity(speciesDTO);
+    public Integer update(String jsonString) {
+        Species species = speciesMapper.revertToEntity(jsonString);
         try {
             speciesRepository.save(species);
+            return species.getId();
         } catch (Exception e) {
             throw new RuntimeException("Error update species " + e.getMessage());
         }
     }
 
+//    @CacheEvict("speciesList")
     @Override
     public void hide(Integer id) {
         Species species = speciesRepository.findByIdAndStatus(id,true);
@@ -65,6 +73,7 @@ public class SpeciesService implements SpeciesServiceImp {
         speciesRepository.save(species);
     }
 
+//    @CacheEvict("speciesList")
     @Override
     public void show(Integer id) {
         Species species = speciesRepository.findByIdAndStatus(id,false);
@@ -73,6 +82,7 @@ public class SpeciesService implements SpeciesServiceImp {
         speciesRepository.save(species);
     }
 
+//    @CacheEvict("speciesList")
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {

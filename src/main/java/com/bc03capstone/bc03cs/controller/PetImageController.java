@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.PetImageDTO;
 import com.bc03capstone.bc03cs.service.imp.PetImageServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +30,9 @@ public class PetImageController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(
-            @RequestPart(value = "petImageDTO") PetImageDTO petImageDTO,
+            @RequestPart(value = "petId") Integer petId,
             @RequestPart(value = "imageUrl") MultipartFile imageUrl) {
-        Integer id = petImageServiceImp.add(petImageDTO, imageUrl);
+        Integer id = petImageServiceImp.add(petId, imageUrl);
         logger.info("add petImage id: " + id);
         return new ResponseEntity<>("Add petImage success", HttpStatus.OK);
     }

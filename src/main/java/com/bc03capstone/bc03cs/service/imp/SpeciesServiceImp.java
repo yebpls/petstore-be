@@ -7,8 +7,8 @@ import java.util.List;
 public interface SpeciesServiceImp {
     List<SpeciesDTO> findAll();
     SpeciesDTO findById(Integer id);
-    Integer add(SpeciesDTO speciesDTO);
-    void update(SpeciesDTO speciesDTO);
+    Integer add(String jsonString);
+    Integer update(String jsonString);
     void hide(Integer id);
     void show(Integer id);
     void delete(Integer id);

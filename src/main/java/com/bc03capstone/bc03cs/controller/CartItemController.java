@@ -1,6 +1,5 @@
 package com.bc03capstone.bc03cs.controller;
 
-import com.bc03capstone.bc03cs.DTO.CartItemDTO;
 import com.bc03capstone.bc03cs.service.imp.CartItemServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +28,16 @@ public class CartItemController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody CartItemDTO cartItemDTO) {
-        Integer id = cartItemServiceImp.add(cartItemDTO);
+    public ResponseEntity<?> add(@RequestBody String jsonString) {
+        Integer id = cartItemServiceImp.add(jsonString);
         logger.info("add cartItem id: " + id);
         return new ResponseEntity<>("Add cartItem success", HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> update(@RequestBody CartItemDTO cartItemDTO) {
-        cartItemServiceImp.update(cartItemDTO);
-        logger.info("update cartItem id: " + cartItemDTO.getId());
+    public ResponseEntity<?> update(@RequestBody String jsonString) {
+        Integer id = cartItemServiceImp.update(jsonString);
+        logger.info("update cartItem id: " + id);
         return new ResponseEntity<>("update cartItem success", HttpStatus.OK);
     }
 

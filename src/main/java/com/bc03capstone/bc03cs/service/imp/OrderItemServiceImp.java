@@ -7,8 +7,8 @@ import java.util.List;
 public interface OrderItemServiceImp {
     List<OrderItemDTO> findAllByOrders(Integer orderId);
     OrderItemDTO findById(Integer id);
-    Integer add(OrderItemDTO orderItemDTO);
-    void update(OrderItemDTO orderItemDTO);
+    Integer add(String jsonString);
+    Integer update(String jsonString);
     void hide(Integer id);
     void show(Integer id);
     void delete(Integer id);
