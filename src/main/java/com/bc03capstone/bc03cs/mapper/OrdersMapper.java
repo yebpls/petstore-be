@@ -4,6 +4,7 @@ import com.bc03capstone.bc03cs.DTO.OrdersDTO;
 import com.bc03capstone.bc03cs.entity.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class OrdersMapper {
 
     public Orders revertToEntity(String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         try {
             OrdersDTO ordersDTO = objectMapper.readValue(jsonString, OrdersDTO.class);
             Orders orders = modelMapper.map(ordersDTO,Orders.class);
