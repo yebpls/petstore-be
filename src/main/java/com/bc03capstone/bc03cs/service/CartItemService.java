@@ -27,14 +27,14 @@ public class CartItemService implements CartItemServiceImp {
     @Autowired
     private CartItemMapper cartItemMapper;
 
-//    @Cacheable(value = "cartItemList", key = "#cartId")
+    @Cacheable(value = "cartItemList", key = "#cartId")
     @Override
     public List<CartItemDTO> findAllByCart(Integer cartId) {
         Cart cart = cartRepository.findByIdAndStatus(cartId,true);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return cartItemRepository.findAllByCartAndStatus(cart,true)
                 .stream().map(cartItemMapper::convertToDTO).collect(Collectors.toList());
@@ -46,7 +46,7 @@ public class CartItemService implements CartItemServiceImp {
         return cartItemMapper.convertToDTO(cartItem);
     }
 
-//    @CacheEvict(value = "cartItemList", allEntries = true)
+    @CacheEvict(value = "cartItemList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public Integer add(String jsonString) {
@@ -59,7 +59,7 @@ public class CartItemService implements CartItemServiceImp {
         }
     }
 
-//    @CacheEvict(value = "cartItemList", allEntries = true)
+    @CacheEvict(value = "cartItemList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public Integer update(String jsonString) {
@@ -72,7 +72,7 @@ public class CartItemService implements CartItemServiceImp {
         }
     }
 
-//    @CacheEvict(value = "cartItemList", allEntries = true)
+    @CacheEvict(value = "cartItemList", allEntries = true)
     @Override
     public void hide(Integer id) {
         CartItem cartItem = cartItemRepository.findByIdAndStatus(id,true);
@@ -80,7 +80,7 @@ public class CartItemService implements CartItemServiceImp {
         cartItemRepository.save(cartItem);
     }
 
-//    @CacheEvict(value = "cartItemList", allEntries = true)
+    @CacheEvict(value = "cartItemList", allEntries = true)
     @Override
     public void show(Integer id) {
         CartItem cartItem = cartItemRepository.findByIdAndStatus(id,false);
@@ -88,7 +88,7 @@ public class CartItemService implements CartItemServiceImp {
         cartItemRepository.save(cartItem);
     }
 
-//    @CacheEvict(value = "cartItemList", allEntries = true)
+    @CacheEvict(value = "cartItemList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {

@@ -33,13 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
         Optional<String> tokenOptional = Optional.ofNullable(bearerToken);
         if (tokenOptional.isPresent()) {
             String token  = tokenOptional.get().substring(7);
-            System.out.println("Check token product:" + token) ;
             if (!token.isEmpty()) {
                 String data = jwtHelper.decodeToken(token);
-                System.out.println("Decoded token data: " + data);
                 Type listType = new TypeToken<List<SimpleGrantedAuthority>>() {}.getType();
                 List<GrantedAuthority> listRoles = gson.fromJson(data,listType);
-                System.out.println("Check role:" + data + " size List role: " + listRoles.size());
                 if(data != null) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("","", listRoles);
                     SecurityContext securityContext = SecurityContextHolder.getContext();

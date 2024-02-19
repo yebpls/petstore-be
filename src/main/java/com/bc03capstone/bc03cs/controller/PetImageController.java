@@ -28,9 +28,9 @@ public class PetImageController {
         return new ResponseEntity<>(petImageServiceImp.findById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add/{petId}")
     public ResponseEntity<?> add(
-            @RequestPart(value = "petId") Integer petId,
+            @PathVariable Integer petId,
             @RequestPart(value = "imageUrl") MultipartFile imageUrl) {
         Integer id = petImageServiceImp.add(petId, imageUrl);
         logger.info("add petImage id: " + id);
