@@ -5,6 +5,7 @@ import com.bc03capstone.bc03cs.entity.Pet;
 import com.bc03capstone.bc03cs.entity.Species;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class PetMapper {
 
     public Pet revertToEntity(String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         try {
             PetDTO petDTO = objectMapper.readValue(jsonString, PetDTO.class);
             Pet pet = modelMapper.map(petDTO, Pet.class);

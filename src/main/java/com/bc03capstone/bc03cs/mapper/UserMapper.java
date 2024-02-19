@@ -4,6 +4,7 @@ import com.bc03capstone.bc03cs.DTO.UserDTO;
 import com.bc03capstone.bc03cs.entity.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ public class UserMapper {
 
     public User revertToEntity(String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         try {
             UserDTO userDTO = objectMapper.readValue(jsonString, UserDTO.class);
             User user = modelMapper.map(userDTO,User.class);

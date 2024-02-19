@@ -25,9 +25,14 @@ public class SpeciesService implements SpeciesServiceImp {
     @Autowired
     private PetServiceImp petServiceImp;
 
-//    @Cacheable("speciesList")
+    @Cacheable("speciesList")
     @Override
     public List<SpeciesDTO> findAll() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
         return speciesRepository.findAllByStatus(true)
                 .stream().map(speciesMapper::convertToDTO).collect(Collectors.toList());
     }
@@ -38,7 +43,7 @@ public class SpeciesService implements SpeciesServiceImp {
         return speciesMapper.convertToDTO(species);
     }
 
-//    @CacheEvict("speciesList")
+    @CacheEvict(value = "speciesList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public Integer add(String jsonString) {
@@ -51,7 +56,7 @@ public class SpeciesService implements SpeciesServiceImp {
         }
     }
 
-//    @CacheEvict("speciesList")
+    @CacheEvict(value = "speciesList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public Integer update(String jsonString) {
@@ -64,7 +69,7 @@ public class SpeciesService implements SpeciesServiceImp {
         }
     }
 
-//    @CacheEvict("speciesList")
+    @CacheEvict(value = "speciesList", allEntries = true)
     @Override
     public void hide(Integer id) {
         Species species = speciesRepository.findByIdAndStatus(id,true);
@@ -73,7 +78,7 @@ public class SpeciesService implements SpeciesServiceImp {
         speciesRepository.save(species);
     }
 
-//    @CacheEvict("speciesList")
+    @CacheEvict(value = "speciesList", allEntries = true)
     @Override
     public void show(Integer id) {
         Species species = speciesRepository.findByIdAndStatus(id,false);
@@ -82,7 +87,7 @@ public class SpeciesService implements SpeciesServiceImp {
         speciesRepository.save(species);
     }
 
-//    @CacheEvict("speciesList")
+    @CacheEvict(value = "speciesList", allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {

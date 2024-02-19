@@ -3,7 +3,6 @@ package com.bc03capstone.bc03cs.jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,9 +36,8 @@ public class JwtHelper {
                     .parseSignedClaims(token)
                     .getPayload()
                     .getSubject();
-            System.out.println("token oke" + data);
         } catch (Exception e) {
-            System.out.println("Error parse token: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
         return data;
     }

@@ -51,21 +51,26 @@ public class PetService implements PetServiceImp {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
-//    @Cacheable("petList")
+    @Cacheable("petList")
     @Override
     public List<PetDTO> findAll() {
         try {
-            Thread.sleep(1000); // Delay 1 giây (1000 milliseconds)
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return petRepository.findAllByIsSoldAndStatus(false, true)
                 .stream().map(petMapper::convertToDTO).collect(Collectors.toList());
     }
 
-//    @Cacheable("petListBySpecies")
+    @Cacheable(value = "petListBySpecies", key = "#speciesId")
     @Override
     public List<PetDTO> findAllBySpecies(Integer speciesId) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
         Species species = speciesRepository.findByIdAndStatus(speciesId,true);
         return petRepository.findAllBySpeciesAndIsSoldAndStatus(species, false,true)
                 .stream().map(petMapper::convertToDTO).collect(Collectors.toList());
@@ -77,7 +82,7 @@ public class PetService implements PetServiceImp {
         return petMapper.convertToDTO(pet);
     }
 
-//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public Integer add(String jsonString, MultipartFile mainImage, MultipartFile[] imageUrlList) {
@@ -96,7 +101,7 @@ public class PetService implements PetServiceImp {
         }
     }
 
-//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public Integer update(String jsonString, MultipartFile mainImage) {
@@ -112,7 +117,7 @@ public class PetService implements PetServiceImp {
         }
     }
 
-//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void sold(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,true);
@@ -120,7 +125,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
-//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void hide(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,true);
@@ -133,7 +138,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
-//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Override
     public void show(Integer id) {
         Pet pet = petRepository.findByIdAndStatus(id,false);
@@ -142,7 +147,7 @@ public class PetService implements PetServiceImp {
         petRepository.save(pet);
     }
 
-//    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
+    @CacheEvict(value = {"petList","petListBySpecies"}, allEntries = true)
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
     @Override
     public void delete(Integer id) {
